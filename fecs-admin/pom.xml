@@ -11,6 +11,14 @@
 
 	<artifactId>fecs-admin</artifactId>
 
+	<dependencies>
+		<dependency>
+			<groupId>fecs</groupId>
+			<artifactId>fecs-commons</artifactId>
+			<version>${version}</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>

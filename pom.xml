@@ -9,8 +9,21 @@
 	<packaging>pom</packaging>
 	<version>0.0.1</version>
 	<modules>
+		<module>fecs-commons</module>
 		<module>fecs-passenger</module>
 		<module>fecs-admin</module>
 	</modules>
+
+	<properties>
+		<spring.version>3.2.5.RELEASE</spring.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+	</dependencies>
 
 </project>
