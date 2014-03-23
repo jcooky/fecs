@@ -5,13 +5,16 @@ import fecs.admin.ui.AdminUI;
 import fecs.commons.config.RootConfig;
 import org.springframework.context.support.GenericApplicationContext;
 
+import java.io.IOException;
+
 /**
  * Created by jcooky on 2014. 3. 22..
  */
 public class Main {
-  public static void main(String []args) {
+
+  public static void main(String []args) throws IOException {
     GenericApplicationContext applicationContext = RootConfig.boot(AdminConfig.class);
-    AdminUI adminUI = applicationContext.getBean(AdminUI.class);
-    adminUI.run();
+    applicationContext.getBean(AdminUI.class).run();
+    applicationContext.getBean(Server.class).serve();
   }
 }

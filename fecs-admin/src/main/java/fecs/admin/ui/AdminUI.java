@@ -1,5 +1,6 @@
 package fecs.admin.ui;
 
+
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;

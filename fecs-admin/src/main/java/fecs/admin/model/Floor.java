@@ -25,9 +25,11 @@ public class Floor extends Rectangle implements Drawable {
   }
 
   public void draw(Graphics g) {
+    g.setFont(Font.getFont(Font.SANS_SERIF));
     g.setColor(Color.WHITE);
-    g.fillRect(this.x+1, this.y, this.width-2, this.height);
+    g.fillRect(this.x+1, this.y, this.width, this.height);
     g.setColor(Color.BLACK);
-    g.drawRect(this.x+1, this.y, this.width-2, this.height);
+    g.drawRect(this.x+1, this.y, this.width, this.height);
+    g.drawString(this.floor + "층", this.x+1, this.y+15);
   }
 }

@@ -19,7 +19,7 @@
           <component id="7adca" class="fecs.admin.ui.FloorsPanel" binding="floorsPanel" custom-create="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="150" height="550"/>
+                <minimum-size width="153" height="555"/>
               </grid>
             </constraints>
             <properties/>
@@ -27,7 +27,7 @@
           <component id="66f58" class="fecs.admin.ui.CavinPanel" binding="cavinPanel" custom-create="true">
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <minimum-size width="230" height="550"/>
+                <minimum-size width="230" height="555"/>
               </grid>
             </constraints>
             <properties/>

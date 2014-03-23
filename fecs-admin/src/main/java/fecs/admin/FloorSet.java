@@ -27,10 +27,12 @@ public class FloorSet extends HashSet<Floor> implements InitializingBean {
   public void afterPropertiesSet() throws Exception {
     int y = 0, numGroundFloors = 10;
 
-    for (int i = -1 ; i < numGroundFloors ; ++i) {
-      this.add(new Floor(i, new Rectangle(0, y, FLOOR.width, FLOOR.height)));
+    for (int i = numGroundFloors ; i >= -1 ; --i) {
+      if (i != 0) {
+        this.add(new Floor(i, new Rectangle(0, y, FLOOR.width, FLOOR.height)));
 
-      y += FLOOR.height;
+        y += FLOOR.height;
+      }
     }
   }
 }
