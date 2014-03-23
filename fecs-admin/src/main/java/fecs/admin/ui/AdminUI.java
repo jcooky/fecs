@@ -13,7 +13,7 @@ public class AdminUI extends JFrame implements Runnable {
   private JPanel rootPanel;
 
   private FloorsPanel floorsPanel;
-  private CavinPanel cavinPanel;
+  private CabinPanel cabinPanel;
 
   private ApplicationContext applicationContext;
 
@@ -34,6 +34,6 @@ public class AdminUI extends JFrame implements Runnable {
 
   private void createUIComponents() {
     this.floorsPanel = applicationContext.getBean(FloorsPanel.class);
-    this.cavinPanel = applicationContext.getBean(CavinPanel.class);
+    this.cabinPanel = applicationContext.getBean(CabinPanel.class);
   }
 }
