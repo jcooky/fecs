@@ -1,7 +1,7 @@
 package fecs.admin.ui;
 
 import fecs.admin.FloorSet;
-import fecs.admin.model.Floor;
+import fecs.commons.model.Floor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
@@ -22,7 +22,12 @@ public class FloorsPanel extends JPanel {
   @Override
   public void paint(Graphics g) {
     for (Floor floor : floorSet) {
-      floor.draw(g);
+      g.setFont(Font.getFont(Font.SANS_SERIF));
+      g.setColor(Color.WHITE);
+      g.fillRect((int)floor.x+1, (int)floor.y, (int)floor.width, (int)floor.height);
+      g.setColor(Color.BLACK);
+      g.drawRect((int)floor.x + 1, (int)floor.y, (int)floor.width, (int)floor.height);
+      g.drawString(floor.getFloor() + "층", (int)floor.x+1, (int)floor.y+15);
     }
 
 //    super.paint(g);

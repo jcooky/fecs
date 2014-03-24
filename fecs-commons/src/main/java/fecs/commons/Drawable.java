@@ -1,4 +1,4 @@
-package fecs.admin;
+package fecs.commons;
 
 import java.awt.*;
 

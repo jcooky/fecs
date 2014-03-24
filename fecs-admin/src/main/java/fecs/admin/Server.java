@@ -24,6 +24,12 @@ public class Server extends IoHandlerAdapter {
   @Autowired
   private ApplicationContext applicationContext;
 
+  private NioSocketAcceptor acceptor;
+
+  public NioSocketAcceptor getAcceptor() {
+    return acceptor;
+  }
+
   @Override
   public void messageReceived(IoSession session, Object message) throws Exception {
     if (message instanceof Throwable) {
@@ -43,7 +49,7 @@ public class Server extends IoHandlerAdapter {
   }
 
   public void serve() throws IOException {
-    NioSocketAcceptor acceptor = new NioSocketAcceptor();
+    acceptor = new NioSocketAcceptor();
 //    NioSocketConnector acceptor = new NioSocketConnector();
     acceptor.setReuseAddress(true);
 
