@@ -18,9 +18,9 @@ import java.util.Arrays;
 public class CabinsController implements InitializingBean {
   private static final Dimension SIZE = new Dimension(50, 50);
 
-  private final Cabin left = new Cabin(new Rectangle2D.Double(0.0, 0.0, SIZE.getWidth(), SIZE.getHeight()));
-  private final Cabin right = new Cabin(new Rectangle2D.Double(left.x + SIZE.getWidth() + 30.0, 0.0, SIZE.getWidth(), SIZE.getHeight()));
-  private final Cabin both[] = new Cabin[]{left, right};
+  private Cabin left = new Cabin(new Rectangle2D.Double(0.0, 0.0, SIZE.getWidth(), SIZE.getHeight()));
+  private Cabin right = new Cabin(new Rectangle2D.Double(left.x + SIZE.getWidth() + 30.0, 0.0, SIZE.getWidth(), SIZE.getHeight()));
+  private Cabin both[] = new Cabin[]{left, right};
 
   @Autowired
   private FloorSet floorSet;
@@ -125,5 +125,13 @@ public class CabinsController implements InitializingBean {
 
   public Cabin[] getBoth() {
     return both;
+  }
+
+  public void setLeft(Cabin left) {
+    this.left = left;
+  }
+
+  public void setRight(Cabin right) {
+    this.right = right;
   }
 }
