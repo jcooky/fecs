@@ -45,7 +45,7 @@ public class FloorSetTest extends AbstractSpringBasedTestSupport {
     assertTrue(floor.isPushed(Vector.UP));
     assertFalse(floor.isPushed(Vector.DOWN));
 
-    Passenger target = floor.take(Vector.UP);
+    Passenger target = floor.getPassengers().get(Vector.UP).take();
     assertNotNull(target);
     assertEquals(passenger, target);
   }
