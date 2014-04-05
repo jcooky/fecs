@@ -19,7 +19,6 @@ public class CabinPanel extends JPanel {
   @Override
   public void paint(Graphics g) {
     for (Cabin cabin : cabinsController.getBoth()) {
-
       cabin.update();
 
       g.setColor(Color.WHITE);
