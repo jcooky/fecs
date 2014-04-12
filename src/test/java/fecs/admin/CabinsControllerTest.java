@@ -26,7 +26,7 @@ public class CabinsControllerTest extends AbstractSpringBasedTestSupport {
   public void setUp() {
     MockitoAnnotations.initMocks(this);
 
-    cabinsController.setLeft(cabinsController);
+    //cabinsController.setLeft(cabinsController);
   }
 
   @Test
