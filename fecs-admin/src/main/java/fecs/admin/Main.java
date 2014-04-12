@@ -1,7 +1,6 @@
 package fecs.admin;
 
 import fecs.admin.config.AdminConfig;
-import fecs.admin.event.listener.NetworkEventListener;
 import fecs.admin.ui.AdminUI;
 import fecs.commons.config.RootConfig;
 import org.springframework.context.ApplicationListener;
@@ -19,7 +18,6 @@ public class Main {
         applicationContext.addApplicationListener(listener);
       }
     }
-    applicationContext.addApplicationListener(applicationContext.getBean(NetworkEventListener.class));
 
     return applicationContext;
   }
@@ -32,6 +30,5 @@ public class Main {
     GenericApplicationContext applicationContext = boot();
 
     applicationContext.getBean(AdminUI.class).run();
-    applicationContext.getBean(Server.class).serve();
   }
 }
