@@ -2,6 +2,7 @@ package fecs;
 
 import fecs.config.RootConfig;
 import fecs.ui.AdminUI;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.support.GenericApplicationContext;
 
@@ -17,19 +18,17 @@ public class Main {
         applicationContext.addApplicationListener(listener);
       }
     }
-    applicationContext.addApplicationListener(applicationContext.getBean(NetworkEventListener.class));
 
     return applicationContext;
   }
 
   public static GenericApplicationContext boot() throws IOException {
-    return boot(RootConfig.boot(AdminConfig.class));
+    return boot(RootConfig.boot());
   }
 
   public static void main(String []args) throws IOException {
     GenericApplicationContext applicationContext = boot();
 
     applicationContext.getBean(AdminUI.class).run();
-    applicationContext.getBean(Server.class).serve();
   }
 }
