@@ -3,10 +3,7 @@ package fecs.ui;
 import org.springframework.context.ApplicationContext;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by jcooky on 2014. 3. 22..
@@ -22,7 +19,7 @@ public class AdminUI extends JFrame implements Runnable {
   }
   public void run() {
     setContentPane(rootPanel);
-    ChIdeas_orz();
+    addControllerUI();
     pack();
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
@@ -38,7 +35,7 @@ public class AdminUI extends JFrame implements Runnable {
     this.floorsPanel = applicationContext.getBean(FloorsPanel.class);
     this.cabinPanel = applicationContext.getBean(CabinPanel.class);
   }
-  private void ChIdeas_orz(){
+  private void addControllerUI(){
     rootPanel.setLayout(new BoxLayout(rootPanel,BoxLayout.Y_AXIS));
     controlPanel=new JPanel(new GridBagLayout());
     GridBagConstraints bag=new GridBagConstraints();
