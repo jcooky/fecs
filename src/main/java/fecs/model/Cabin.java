@@ -1,5 +1,7 @@
 package fecs.model;
 
+import fecs.physics.Engine;
+
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.Comparator;
@@ -17,6 +19,8 @@ public class Cabin extends Rectangle2D.Double implements Serializable {
   }
 
   private static final double ACCEL = 0.1;
+  public static final double WIDTH = 50.0;
+  public static final double HEIGHT = 50.0;
 
   private SortedSet<Floor> nextSet = new TreeSet<Floor>(new Comparator<Floor>() {
     @Override
@@ -31,8 +35,13 @@ public class Cabin extends Rectangle2D.Double implements Serializable {
 
   private long lastUpdateTime = System.currentTimeMillis();
 
-  public Cabin(Rectangle2D.Double rect) {
+  private Engine engine;
+
+  public Cabin(final Engine engine, Rectangle2D.Double rect) {
     super(rect.x, rect.y, rect.width, rect.height);
+
+    this.engine = engine;
+
   }
 
   public SortedSet<Floor> getNextSet() {
@@ -59,8 +68,7 @@ public class Cabin extends Rectangle2D.Double implements Serializable {
     this.target = null;
   }
 
-  public void update() {
-    long curtime = System.currentTimeMillis(), deltaTime = curtime - lastUpdateTime;
+  public void update(long deltaTime) {
     double accel = ACCEL * (this.vector == Vector.DOWN ? 1.0 : -1.0);
 
     switch(state) {
@@ -81,8 +89,6 @@ public class Cabin extends Rectangle2D.Double implements Serializable {
         stop();
         break;
     }
-
-    lastUpdateTime = curtime;
   }
 
   public State getState() {

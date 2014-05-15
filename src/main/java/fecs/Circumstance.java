@@ -3,6 +3,10 @@ package fecs;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.python.core.Py;
+import org.python.core.PyObject;
+import org.python.core.PyString;
+import org.python.util.*;
 /**
  * Created by jcooky on 2014. 4. 8..
  */
@@ -22,15 +26,30 @@ public abstract class Circumstance {
     this.put(DEFAULT, new DefaultCircumstance());
   }};
 
+  private static PythonInterpreter interp;
+  private PyObject pyObject; // where each circumstances gets python object
+
   protected long elapsedTime;
   protected String name;
 
   protected Circumstance(String name) {
     this.name = name;
+    if(null==interp) {
+      interp = new PythonInterpreter();
+      interp.exec("from fecs import *");
+    }
+    this.pyObject = interp.get(name+"Circumstance"); //use name value as those of jython class names
   }
 
-  public abstract void trigger() throws Exception;
-  public abstract Circumstance setParameter(String key, Object val);
+  public void trigger() throws Exception{
+    PyObject rst = pyObject.__call__();
+    if(!(Boolean)rst.__tojava__(Boolean.class))
+      throw new Exception("something went wrong with jython");
+  };
+  public Circumstance setParameter(String key, Object val){
+    pyObject.__call__(new PyString(key), Py.java2py(val));
+    return this;
+  };
 
   public static Circumstance get(String name) {
     return strategies.get(name);
@@ -44,6 +63,7 @@ public abstract class Circumstance {
 
     @Override
     public void trigger() throws Exception {
+
     }
 
     @Override
