@@ -1,7 +1,10 @@
 package fecs.simulator;
 
 import fecs.Circumstance;
-import fecs.model.*;
+import fecs.interfaces.IEngine;
+import fecs.model.CabinType;
+import fecs.model.FloorType;
+import fecs.model.Vector;
 import fecs.ui.Renderer;
 import fecs.ui.UserInterface;
 import org.slf4j.Logger;
@@ -19,12 +22,9 @@ import java.util.Map;
  * Created by jcooky on 2014. 5. 12..
  */
 @Component
-public class Engine implements Runnable, InitializingBean {
+public class Engine implements IEngine, Runnable, InitializingBean {
   private static final double TARGET_WIDTH = 300;
   private static final double TARGET_HEIGHT = 550;
-
-  public static final int STATE_STOP = 0x00, STATE_START = 0x01, STATE_FIRE = 0x02, STATE_CRASH = 0x04, STATE_FLOOD = 0x08, STATE_EARTHQUAKE = 0x10,
-      STATE_NORMAL = 0x20;
 
   private static final double ACCEL = 0.1;
 
@@ -42,7 +42,7 @@ public class Engine implements Runnable, InitializingBean {
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
   private Double cabinWeight = 1.0;
   private Integer state = STATE_STOP;
-  private Double forceBreak = 10.0;
+  private Double forceBreak = 9.8;
   private Double motorOutput = 10.0;
   private Integer cabinLimitPeople = 30;
   private Double cabinLimitWeight = 23.0;
@@ -94,13 +94,13 @@ public class Engine implements Runnable, InitializingBean {
     g.setColor(Color.WHITE);
     g.fillRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
     g.setColor(Color.BLACK);
-    g.fillRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+    g.drawRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
 
     cabin = cabins.get(CabinType.RIGHT);
     g.setColor(Color.WHITE);
-    g.fillRect((int) (Cabin.WIDTH + 40.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+    g.fillRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
     g.setColor(Color.BLACK);
-    g.fillRect((int) (Cabin.WIDTH + 40.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+    g.drawRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
 
     for (Floor floor : floors.values()) {
       g.setFont(Font.getFont(Font.SANS_SERIF));
@@ -116,7 +116,7 @@ public class Engine implements Runnable, InitializingBean {
 
   private void updateCabin(Cabin cabin, long deltaTime) {
     double motor = motorOutput * (cabin.getVector() == Vector.DOWN ? 1.0 : -1.0);
-    double accel = (motorOutput + gravity - forceBreak) / (cabinWeight + (passengerWeight * cabin.getPassengers().size()));
+    double accel = (motor + gravity - forceBreak) / (cabinWeight + (passengerWeight * cabin.getPassengers().size()));
     Vector vector = cabin.getVector();
     Floor target = cabin.getTarget();
 

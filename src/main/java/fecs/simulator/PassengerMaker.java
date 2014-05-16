@@ -1,8 +1,7 @@
 package fecs.simulator;
 
+import fecs.interfaces.IPassengerMaker;
 import fecs.model.FloorType;
-import fecs.simulator.Passenger;
-import fecs.simulator.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Created by Byoungwoo on 2014-05-13.
  */
 @Component
-public class PassengerMaker {
+public class PassengerMaker implements IPassengerMaker {
   @Autowired
   private Engine engine;
 
