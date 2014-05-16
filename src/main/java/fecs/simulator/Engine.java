@@ -37,17 +37,22 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   private final Logger logger = LoggerFactory.getLogger(Engine.class);
 
   private Long lastUpdateTime = System.currentTimeMillis();
-  private Double gravity = 9.8;
+
+  /* gravity related constants */
+  public static final Double earthGravity = 9.80665d;
+  public static final Double[] gravityTable = new Double[]{earthGravity,1.622d,3.711d,8.87d}; // 지구, 달, 화성, 금성
+
+  private Double gravity = earthGravity;
   private Map<CabinType, Cabin> cabins = new EnumMap<>(CabinType.class);
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
-  private Double cabinWeight = 1.0;
+  private Double cabinWeight = 700d;
   private Integer state = STATE_STOP;
-  private Double forceBreak = 9.8;
-  private Double motorOutput = 10.0;
-  private Integer cabinLimitPeople = 30;
-  private Double cabinLimitWeight = 23.0;
+  private Double forceBreak = 10000d;
+  private Double motorOutput = 27000d;
+  private Integer cabinLimitPeople = 12;
+  private Double cabinLimitWeight = 1660d; // = cabinLimitPeople*passengerWeight+cabinWeight;
   private Double moreEnterProbability = 0.22;
-  private Double passengerWeight = 1.0;
+  private Double passengerWeight = 80d;
 
   @Override
   public void run() {
