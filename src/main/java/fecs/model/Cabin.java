@@ -1,94 +1,51 @@
 package fecs.model;
 
-import fecs.physics.Engine;
-
-import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by jcooky on 2014. 3. 23..
  */
-public class Cabin extends Rectangle2D.Double implements Serializable {
+public class Cabin extends Place implements Serializable {
 
-  public static enum State {
-    STOP,
-    MOVE
-  }
+  public static final int WIDTH = 50;
+  public static final int HEIGHT = 50;
 
-  private static final double ACCEL = 0.1;
-  public static final double WIDTH = 50.0;
-  public static final double HEIGHT = 50.0;
 
-  private SortedSet<Floor> nextSet = new TreeSet<Floor>(new Comparator<Floor>() {
-    @Override
-    public int compare(Floor o1, Floor o2) {
-      return o1.getFloor() - o2.getFloor();
-    }
-  });
+  private PriorityQueue<Floor> queue = new PriorityQueue<>(new TreeSet<>(new NextSetComparator()));
+  private Set<Passenger> passengers = new HashSet<>();
+  private boolean isOn = false;
 
   private State state = State.STOP;
   private Floor target = null;
   private Vector vector = null;
 
-  private long lastUpdateTime = System.currentTimeMillis();
-
-  private Engine engine;
-
-  public Cabin(final Engine engine, Rectangle2D.Double rect) {
-    super(rect.x, rect.y, rect.width, rect.height);
-
-    this.engine = engine;
-
-  }
-
-  public SortedSet<Floor> getNextSet() {
-    return nextSet;
-  }
-
-  public void setTarget(Floor floor) {
-    move(floor, this.state);
-  }
-
-  private void move(Floor floor, State state) {
+  public void move(Floor floor, State state) {
     if (State.MOVE.equals(state)) {
-      nextSet.add(floor);
+      queue.add(floor);
     } else {
       this.state = State.MOVE;
       target = floor;
-      vector = target.y > this.y ? Vector.DOWN : Vector.UP;
+      vector = target.position > this.position ? Vector.DOWN : Vector.UP;
     }
   }
 
-  private void stop() {
+  public void stop() {
     this.state = State.STOP;
     this.vector = null;
     this.target = null;
   }
 
-  public void update(long deltaTime) {
-    double accel = ACCEL * (this.vector == Vector.DOWN ? 1.0 : -1.0);
+  public void killPassengers() {
+    this.passengers.clear();
+  }
 
-    switch(state) {
-      case MOVE:
-        this.y += (accel * deltaTime * deltaTime)/2.0;
-        if ((this.vector == Vector.DOWN && this.y > target.y)
-            || (this.vector == Vector.UP && this.y < target.y)) {
-          this.y = target.y;
+  public PriorityQueue<Floor> getQueue() {
+    return queue;
+  }
 
-          if (nextSet.isEmpty()) {
-            stop();
-          } else {
-            move(nextSet.first(), State.STOP);
-          }
-        }
-        break;
-      case STOP:
-        stop();
-        break;
-    }
+  public void setTarget(Floor floor) {
+    move(floor, this.state);
   }
 
   public State getState() {
@@ -101,5 +58,30 @@ public class Cabin extends Rectangle2D.Double implements Serializable {
 
   public Vector getVector() {
     return vector;
+  }
+
+  public Floor getTarget() {
+    return target;
+  }
+
+  public void disable() {
+    this.isOn = false;
+  }
+
+  public void enable() {
+    this.isOn = true;
+  }
+
+  private static class NextSetComparator implements Comparator<Floor> {
+
+    @Override
+    public int compare(Floor o1, Floor o2) {
+      return o1.getNum() - o2.getNum();
+    }
+  }
+
+  public static enum State {
+    STOP,
+    MOVE
   }
 }

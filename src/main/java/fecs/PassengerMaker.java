@@ -6,9 +6,6 @@ import fecs.physics.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Created by Byoungwoo on 2014-05-13.
  */
@@ -19,7 +16,6 @@ public class PassengerMaker {
 
   private Integer now = 0, howMany = 10, max = 30;
 
-  private Set<Passenger> passengers = new HashSet<Passenger>();
   private Long lastUpdateTime = null;
 
   /* getters and setters */
@@ -47,22 +43,18 @@ public class PassengerMaker {
     howMany = val;
   }
 
-  public void update(long curTime) {
-    if (lastUpdateTime == null || lastUpdateTime - curTime > 1000.0) {
-      for (int i = 0; i < howMany; ++i) {
-        FloorType start, dest;
+  public void makePassenger() {
+    for (int i = 0; i < howMany; ++i) {
+      FloorType start, dest;
 
-        do {
-          start = FloorType.values()[(int) (Math.random() * FloorType.values().length)];
-          dest = FloorType.values()[(int) (Math.random() * FloorType.values().length)];
-        } while(start == dest);
+      do {
+        start = FloorType.values()[(int) (Math.random() * FloorType.values().length)];
+        dest = FloorType.values()[(int) (Math.random() * FloorType.values().length)];
+      } while (start == dest);
 
-        Passenger passenger = new Passenger(start.getValue(), dest.getValue());
+      Passenger passenger = new Passenger(start.getValue(), dest.getValue());
 
-        engine.getFloors().get(FloorType.FIRST).add(passenger);
-      }
-
-      lastUpdateTime = curTime;
+      engine.getFloors().get(FloorType.FIRST).add(passenger);
     }
 
     now += howMany;
