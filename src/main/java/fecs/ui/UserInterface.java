@@ -16,7 +16,6 @@ public class UserInterface extends JFrame implements Runnable {
 
   private JButton startSim;
   private JButton stopSim;
-  private JButton 화재Button;
   private JPanel rootPanel;
   private JTextField howMany;
   private JTextField forceBreak;
