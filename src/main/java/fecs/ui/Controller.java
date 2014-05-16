@@ -55,7 +55,7 @@ public class Controller {
 
       if (val > 50) val = 50.0;
       else if (val < 0) val = 0.0;
-      else val = 9.8;
+      else val = Engine.earthGravity;
 
       engine.setGravity(val);
       ui.getGravity().setText(String.valueOf(val));
