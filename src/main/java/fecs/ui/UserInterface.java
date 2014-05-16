@@ -29,6 +29,7 @@ public class UserInterface extends JFrame implements Runnable {
   private JTextField cabinLimitPeople;
   private JTextField cabinLimitWeight;
   private JPanel drawTarget;
+  private JComboBox Planet;
 
   @Autowired
   private Controller controller;
@@ -123,8 +124,19 @@ public class UserInterface extends JFrame implements Runnable {
     });
     cabinLimitPeople.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        controller.changeCabinLimitPeople(cabinLimitPeople.getText());
+      public void actionPerformed(ActionEvent e) { controller.changeCabinLimitPeople(cabinLimitPeople.getText()); }
+    });
+    Planet.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e){
+        if(Planet.getSelectedItem().toString().equals("직접입력")){
+          gravity.setEnabled(true);
+          gravity.requestFocus();
+        }
+        else {
+          gravity.setEnabled(false);
+          gravity.setText(Engine.gravityTable[Planet.getSelectedIndex()].toString());
+        }
       }
     });
   }

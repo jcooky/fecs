@@ -27,7 +27,7 @@ public class Controller {
     int state = engine.getState();
 
     if ((state & Engine.STATE_START) != 0) {
-      displayError();
+      displayError("already started");
       return;
     }
 
@@ -38,10 +38,10 @@ public class Controller {
     int state = engine.getState();
 
     if (state == Engine.STATE_STOP) {
-      displayError();
+      displayError("already stopped");
       return;
     }
-    engine.setState(Engine.STATE_STOP);
+    engine.setState(state & ~(Engine.STATE_START));
   }
 
   public void triggerFail(String name) {

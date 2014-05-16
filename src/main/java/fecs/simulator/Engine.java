@@ -37,7 +37,12 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   private final Logger logger = LoggerFactory.getLogger(Engine.class);
 
   private Long lastUpdateTime = System.currentTimeMillis();
-  private Double gravity = 9.8;
+
+  /* gravity related constants */
+  public static final Double earthGravity = 9.80665d;
+  public static final Double[] gravityTable = new Double[]{earthGravity,1.622d,3.711d,8.87d}; // 지구, 달, 화성, 금성
+
+  private Double gravity = earthGravity;
   private Map<CabinType, Cabin> cabins = new EnumMap<>(CabinType.class);
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
   private Double cabinWeight = 1.0;
