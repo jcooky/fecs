@@ -58,17 +58,13 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   public void run() {
     try {
       Long currentTime = System.currentTimeMillis(), deltaTime = lastUpdateTime = System.currentTimeMillis() - lastUpdateTime;
-      int s = state & STATE_START;
 
-      if (s != 0) {
-
+      int s = state & 1; //get last bit
+      if (s == Engine.STATE_START) { //last bit is 1 = started
+        s = (state & ~1)>>1; //get the others bit
+        if(s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
+        Circumstance.get(Circumstance.CircumstanceVector[s]).trigger();
         for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
-
-        if ((state & STATE_FIRE) != 0) {
-
-        } else {
-          Circumstance.get("Default").trigger();
-        }
       }
 
       draw();
@@ -120,11 +116,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   }
 
   private void updateCabin(Cabin cabin, long deltaTime) {
-    double motor = motorOutput * (cabin.getVector() == Vector.DOWN ? 1.0 : -1.0);
-    double accel = (motor + gravity - forceBreak) / (cabinWeight + (passengerWeight * cabin.getPassengers().size()));
     Vector vector = cabin.getVector();
-    Floor target = cabin.getTarget();
+    double motor = motorOutput * (vector==null?0:vector == Vector.DOWN ? 1.0 : -1.0);
+    double accel = (motor + gravity - forceBreak) / (cabinWeight + (passengerWeight * cabin.getPassengers().size()));
 
+    Floor target = cabin.getTarget();
     switch(cabin.getState()) {
       case MOVE:
         cabin.setPosition(cabin.getPosition() + (accel * deltaTime * deltaTime)/2.0); // d = (at^2)/2
@@ -267,5 +263,8 @@ public class Engine implements IEngine, Runnable, InitializingBean {
 
   public Map<FloorType, Floor> getFloors() {
     return floors;
+  }
+  public Map<CabinType, Cabin> getCabins(){
+    return cabins;
   }
 }

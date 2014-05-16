@@ -2,16 +2,20 @@ package fecs;
 
 import fecs.interfaces.ICircumstance;
 import org.python.core.Py;
+import org.python.core.PyModule;
 import org.python.core.PyObject;
 import org.python.core.PyString;
+import org.python.util.PythonInterpreter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 /**
  * Created by jcooky on 2014. 4. 8..
  */
-public abstract class Circumstance implements ICircumstance {
 
+public abstract class Circumstance implements ICircumstance {
   private static final Map<String, Circumstance> strategies = new HashMap<String, Circumstance>() {
     {
       this.put(FIRE, new FireCircumstance());
@@ -23,9 +27,10 @@ public abstract class Circumstance implements ICircumstance {
   };
   protected long elapsedTime;
   protected String name;
+  private PythonInterpreter interp;
   private PyObject pyCircumstance;
   protected Circumstance(String name) {
-    pyCircumstance = Fecs.interp.get(name+"Circumstance");
+    pyCircumstance = Fecs.interp.get(name+"Circumstance");// interp.get(name+"Circumstance");
     this.name = name;
   }
 

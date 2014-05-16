@@ -11,9 +11,8 @@ public class Cabin extends Place implements Serializable {
   public static final int WIDTH = 50;
   public static final int HEIGHT = 50;
 
-
   private PriorityQueue<Floor> queue = new PriorityQueue<>(new TreeSet<>(new NextSetComparator()));
-  private Set<Passenger> passengers = new HashSet<>();
+
   private boolean isOn = false;
 
   private State state = State.STOP;
@@ -34,10 +33,6 @@ public class Cabin extends Place implements Serializable {
     this.state = State.STOP;
     this.vector = null;
     this.target = null;
-  }
-
-  public void killPassengers() {
-    this.passengers.clear();
   }
 
   public PriorityQueue<Floor> getQueue() {
