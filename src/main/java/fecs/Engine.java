@@ -1,6 +1,6 @@
-package fecs.physics;
+package fecs;
 
-import fecs.PassengerMaker;
+import fecs.interfaces.IEngine;
 import fecs.model.Cabin;
 import fecs.model.CabinType;
 import fecs.model.Floor;
@@ -23,12 +23,9 @@ import java.util.Map;
  * Created by jcooky on 2014. 5. 12..
  */
 @Component
-public class Engine implements Runnable, InitializingBean {
+public class Engine implements Runnable, InitializingBean, IEngine {
   private static final double TARGET_WIDTH = 300;
   private static final double TARGET_HEIGHT = 550;
-
-  public static final int STATE_STOP = 0x00, STATE_START = 0x01, STATE_FIRE = 0x02, STATE_CRASH = 0x04, STATE_FLOOD = 0x08, STATE_EARTHQUAKE = 0x10,
-      STATE_NORMAL = 0x20;
 
   private final Logger logger = LoggerFactory.getLogger(Engine.class);
 

@@ -1,8 +1,6 @@
 package fecs;
 
-import fecs.interfaces.IEngine;
 import fecs.interfaces.IFecs;
-import fecs.physics.Engine;
 import fecs.ui.UserInterface;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,5 @@ public class Fecs implements CommandLineRunner,IFecs{
   private static void initJython(){
     interp=new PythonInterpreter();
     interp.execfile("__init__.py");
-    interp.set("this",Fecs.class);
   }
 }

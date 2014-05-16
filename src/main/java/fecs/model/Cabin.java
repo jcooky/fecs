@@ -1,6 +1,6 @@
 package fecs.model;
 
-import fecs.physics.Engine;
+import fecs.Engine;
 
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;

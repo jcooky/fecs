@@ -1,8 +1,8 @@
 package fecs;
 
+import fecs.interfaces.IPassengerMaker;
 import fecs.model.FloorType;
 import fecs.model.Passenger;
-import fecs.physics.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * Created by Byoungwoo on 2014-05-13.
  */
 @Component
-public class PassengerMaker {
+public class PassengerMaker implements IPassengerMaker {
   @Autowired
   private Engine engine;
 

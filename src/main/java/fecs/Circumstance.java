@@ -37,8 +37,7 @@ public abstract class Circumstance implements ICircumstance {
 //  Map<String,Object> param=new HashMap<String,Object>();
   public Circumstance setParameter(String key, Object val){
 //    param.put(key,val);
-    if(!this.name.equals(Circumstance.DEFAULT))
-      pyCircumstance.__getattr__("setParameter").__call__(new PyString(key), Py.java2py(val));
+    pyCircumstance.__getattr__("setParameter").__call__(new PyString(key), Py.java2py(val));
     return this;
   }
 

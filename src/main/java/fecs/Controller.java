@@ -1,6 +1,5 @@
 package fecs;
 
-import fecs.physics.Engine;
 import fecs.ui.UserInterface;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

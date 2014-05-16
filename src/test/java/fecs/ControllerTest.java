@@ -1,7 +1,6 @@
 package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
-import fecs.physics.Engine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

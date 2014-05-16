@@ -1,7 +1,7 @@
 package fecs.ui;
 
 import fecs.Controller;
-import fecs.physics.Engine;
+import fecs.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
