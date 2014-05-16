@@ -30,7 +30,7 @@ public class UserInterface extends JFrame implements Runnable {
   private JTextField cabinLimitWeight;
   private JPanel drawTarget;
   private JComboBox planetCombo;
-
+  
   @Autowired
   private Controller controller;
 
