@@ -1,7 +1,10 @@
 package fecs;
 
+import fecs.interfaces.IEngine;
+import fecs.interfaces.IFecs;
 import fecs.physics.Engine;
 import fecs.ui.UserInterface;
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,12 +20,9 @@ import java.io.IOException;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan(basePackages = "fecs")
-public class Fecs implements CommandLineRunner {
+public class Fecs implements CommandLineRunner,IFecs{
   @Autowired
   private UserInterface userInterface;
-
-  @Autowired
-  private Engine engine;
 
   @Override
   public void run(String... args) throws Exception {
@@ -33,6 +33,13 @@ public class Fecs implements CommandLineRunner {
     SpringApplication app = new SpringApplication(Fecs.class);
     app.setHeadless(false);
 
+    initJython();
     app.run(args);
+  }
+  protected static PythonInterpreter interp;
+  private static void initJython(){
+    interp=new PythonInterpreter();
+    interp.execfile("__init__.py");
+    interp.set("this",Fecs.class);
   }
 }
