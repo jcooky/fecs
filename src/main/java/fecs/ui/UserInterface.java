@@ -30,7 +30,7 @@ public class UserInterface extends JFrame implements Runnable {
   private JTextField cabinLimitWeight;
   private JPanel drawTarget;
   private JComboBox planetCombo;
-  
+
   @Autowired
   private Controller controller;
 
@@ -88,9 +88,7 @@ public class UserInterface extends JFrame implements Runnable {
     });
     totalNumPassengers.addActionListener(new ActionListener() {
       @Override
-      public void actionPerformed(ActionEvent e) {
-        controller.changeTotalNumPassengers(totalNumPassengers.getText());
-      }
+      public void actionPerformed(ActionEvent e) { controller.changeTotalNumPassengers(totalNumPassengers.getText()); }
     });
     gravity.addActionListener(new ActionListener() {
       @Override
