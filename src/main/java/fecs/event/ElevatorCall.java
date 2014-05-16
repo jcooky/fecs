@@ -1,6 +1,6 @@
 package fecs.event;
 
-import fecs.model.Passenger;
+import fecs.simulator.Passenger;
 import fecs.model.Vector;
 import org.springframework.context.ApplicationEvent;
 

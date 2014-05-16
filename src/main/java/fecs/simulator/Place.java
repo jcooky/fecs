@@ -1,4 +1,4 @@
-package fecs.model;
+package fecs.simulator;
 
 import java.util.Set;
 

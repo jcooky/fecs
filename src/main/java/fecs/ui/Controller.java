@@ -1,7 +1,7 @@
-package fecs;
+package fecs.ui;
 
-import fecs.physics.Engine;
-import fecs.ui.UserInterface;
+import fecs.simulator.PassengerMaker;
+import fecs.simulator.Engine;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

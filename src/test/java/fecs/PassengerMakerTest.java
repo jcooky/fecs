@@ -1,10 +1,11 @@
 package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
-import fecs.model.Floor;
+import fecs.simulator.Floor;
 import fecs.model.FloorType;
-import fecs.model.Passenger;
-import fecs.physics.Engine;
+import fecs.simulator.Passenger;
+import fecs.simulator.Engine;
+import fecs.simulator.PassengerMaker;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

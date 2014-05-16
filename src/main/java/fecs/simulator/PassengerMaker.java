@@ -1,8 +1,8 @@
-package fecs;
+package fecs.simulator;
 
 import fecs.model.FloorType;
-import fecs.model.Passenger;
-import fecs.physics.Engine;
+import fecs.simulator.Passenger;
+import fecs.simulator.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

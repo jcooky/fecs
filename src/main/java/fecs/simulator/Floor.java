@@ -1,4 +1,6 @@
-package fecs.model;
+package fecs.simulator;
+
+import fecs.model.Vector;
 
 import java.io.Serializable;
 

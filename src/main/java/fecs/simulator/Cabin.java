@@ -1,4 +1,4 @@
-package fecs.model;
+package fecs.simulator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -18,7 +18,7 @@ public class Cabin extends Place implements Serializable {
 
   private State state = State.STOP;
   private Floor target = null;
-  private Vector vector = null;
+  private fecs.model.Vector vector = null;
 
   public void move(Floor floor, State state) {
     if (State.MOVE.equals(state)) {
@@ -26,7 +26,7 @@ public class Cabin extends Place implements Serializable {
     } else {
       this.state = State.MOVE;
       target = floor;
-      vector = target.position > this.position ? Vector.DOWN : Vector.UP;
+      vector = target.position > this.position ? fecs.model.Vector.DOWN : fecs.model.Vector.UP;
     }
   }
 
@@ -56,7 +56,7 @@ public class Cabin extends Place implements Serializable {
     this.state = state;
   }
 
-  public Vector getVector() {
+  public fecs.model.Vector getVector() {
     return vector;
   }
 

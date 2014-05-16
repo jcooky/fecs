@@ -1,6 +1,6 @@
 package fecs;
 
-import fecs.physics.Engine;
+import fecs.simulator.Engine;
 import fecs.ui.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

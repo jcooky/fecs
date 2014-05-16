@@ -1,7 +1,6 @@
-package fecs.physics;
+package fecs.simulator;
 
 import fecs.Circumstance;
-import fecs.PassengerMaker;
 import fecs.model.*;
 import fecs.ui.Renderer;
 import fecs.ui.UserInterface;

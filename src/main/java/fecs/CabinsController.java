@@ -1,7 +1,7 @@
 package fecs;
 
-import fecs.model.Cabin;
-import fecs.model.Floor;
+import fecs.simulator.Cabin;
+import fecs.simulator.Floor;
 import fecs.model.Vector;
 
 /**
