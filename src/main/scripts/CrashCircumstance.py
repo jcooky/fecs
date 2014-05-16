@@ -6,4 +6,5 @@ def setParameter(key,val):
     vars()[key]=val
 
 def trigger():
+    vars()[time]-=1
     pass
