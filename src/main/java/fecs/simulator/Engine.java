@@ -132,8 +132,9 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   }
 
   public void updateCabin(Cabin cabin, double accel, double deltaTime) {
-    cabin.setVelocity(cabin.getVelocity() + accel * deltaTime);
-    cabin.setPosition(cabin.getPosition() + (cabin.getVelocity() * deltaTime) * 16.6667);
+    double v1 = accel * deltaTime;
+    cabin.setPosition(cabin.getPosition() + (cabin.getVelocity() * deltaTime + 0.5 * (v1 * deltaTime)) * 16.6667);
+    cabin.setVelocity(cabin.getVelocity() + v1);
   }
 
   private void updateCabin(Cabin cabin, double deltaTime) {
