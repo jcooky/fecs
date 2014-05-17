@@ -49,13 +49,16 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   }
 
   @Test
-  public void testTriggerFail() throws Exception {
+  public void testStopSimulationWithOthers() throws Exception {
     // when
-    when(engine.getState()).thenReturn(1);
-    controller.triggerFail(ICircumstance.EARTH_QUAKE);
+    when(engine.getState()).thenReturn((ICircumstance.STATE_CRASH << 1) | Engine.STATE_START);
+    controller.stopSimulation();
 
-    // then
-    verify(engine).setState(0x09);
+    verify(engine).setState((ICircumstance.STATE_CRASH << 1));
+  }
+
+  @Test
+  public void testTriggerFail() throws Exception {
   }
 
   @Test
