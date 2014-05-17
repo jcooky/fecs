@@ -2,6 +2,7 @@ package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
 import fecs.interfaces.ICircumstance;
+import fecs.interfaces.IEngine;
 import fecs.simulator.Engine;
 import fecs.ui.Controller;
 import org.junit.Before;
@@ -29,12 +30,22 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
 
   @Test
   public void testStartSimulation() throws Exception {
+    // when
+    when(engine.getState()).thenReturn(0);
+    controller.startSimulation();
 
+    // then
+    verify(engine).setState(IEngine.STATE_START);
   }
 
   @Test
   public void testStopSimulation() throws Exception {
+    // when
+    when(engine.getState()).thenReturn(1);
+    controller.stopSimulation();
 
+    // then
+    verify(engine).setState(IEngine.STATE_STOP);
   }
 
   @Test

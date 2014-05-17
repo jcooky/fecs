@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -64,7 +65,9 @@ public class Engine implements IEngine, Runnable, InitializingBean {
         if (s == Engine.STATE_START) { //last bit is 1 = started
           s = (state & ~1) >> 1; //get the others bit
           if (s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
-          Circumstance.get(Circumstance.CircumstanceVector[s]).trigger();
+          Circumstance.get(Circumstance.CircumstanceVector[s])
+              .setParameter("currentTime", currentTime)
+              .trigger();
           for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
         }
       }
@@ -94,25 +97,36 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       g.setColor(Color.GRAY);
       g.fillRect(0, 0, target.getWidth(), target.getHeight());
 
-      Cabin cabin = cabins.get(CabinType.LEFT);
-      g.setColor(Color.WHITE);
-      g.fillRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-      g.setColor(Color.BLACK);
-      g.drawRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+      Map<CabinType, Integer> xmap = new HashMap<CabinType, Integer>() {{
+        this.put(CabinType.LEFT, Floor.WIDTH + 10);
+        this.put(CabinType.RIGHT, Floor.WIDTH + 10 + Cabin.WIDTH + 30);
+      }};
 
-      cabin = cabins.get(CabinType.RIGHT);
-      g.setColor(Color.WHITE);
-      g.fillRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-      g.setColor(Color.BLACK);
-      g.drawRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+      for (CabinType type : cabins.keySet()) {
+        Integer x = xmap.get(type);
+        Cabin cabin = cabins.get(type);
+
+        Integer passengers = new Integer(cabin.getPassengers().size());
+
+        g.setColor(Color.WHITE);
+        g.fillRect(x, (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+        g.setColor(Color.BLACK);
+        g.drawRect(x, (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+        g.drawString(passengers.toString(), (int)((double)x + ((double)(Cabin.WIDTH)/2.0) - ((double)(g.getFont().getSize())/2.0)),
+            (int)(cabin.getPosition() + ((double)(Cabin.HEIGHT)/2.0)));
+      }
 
       for (Floor floor : floors.values()) {
+        Integer passengers = new Integer(floor.getPassengers().size());
+
         g.setFont(Font.getFont(Font.SANS_SERIF));
         g.setColor(Color.WHITE);
         g.fillRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
         g.setColor(Color.BLACK);
         g.drawRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
         g.drawString(floor.getNum() + "층", 1, (int) floor.getPosition() + 15);
+        g.drawString(passengers.toString(), (int)(1.0 + ((double)(Floor.WIDTH)/2.0) - ((double)(g.getFont().getSize())/2.0)),
+            (int)(floor.getPosition() + ((double)(Floor.HEIGHT)/2.0)));
       }
 
       renderer.flush();
@@ -188,6 +202,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   }
 
   public void setState(Integer state) {
+    if ((state|1) == 1) this.state &= state;
     this.state = state;
   }
 
