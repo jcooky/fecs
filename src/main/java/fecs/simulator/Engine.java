@@ -131,6 +131,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       renderer.flush();
   }
 
+  public void updateCabin(Cabin cabin, double accel, double deltaTime) {
+    cabin.setVelocity(cabin.getVelocity() + accel * deltaTime);
+    cabin.setPosition(cabin.getPosition() + (cabin.getVelocity() * deltaTime) * 16.6667);
+  }
+
   private void updateCabin(Cabin cabin, double deltaTime) {
     if (cabin.isOn()) {
       Vector vector = cabin.getVector();
@@ -140,7 +145,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       Floor target = cabin.getTarget();
       switch (cabin.getState()) {
         case MOVE:
-          cabin.setPosition(cabin.getPosition() + (accel * deltaTime * deltaTime * 0.5)); // d = (at^2)/2
+          updateCabin(cabin, accel, deltaTime);
           if ((vector == Vector.DOWN && cabin.getPosition() > target.getPosition())
               || (vector == Vector.UP && cabin.getPosition() < target.getPosition())) {
             cabin.setPosition(target.getPosition());
