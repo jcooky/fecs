@@ -70,11 +70,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
               .trigger();
           for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
         }
+
+        lastUpdateTime = currentTime;
       }
 
-      draw(deltaTime);
-
-      lastUpdateTime = currentTime;
+      draw();
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     } finally {
@@ -88,8 +88,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     this.initCabins();
   }
 
-  private void draw(long deltaTime) {
-    if (deltaTime >= 20) {
+  private void draw() {
       Renderer renderer = ui.getRenderer();
       Graphics g = renderer.getGraphics();
       JPanel target = ui.getDrawTarget();
@@ -130,7 +129,6 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       }
 
       renderer.flush();
-    }
   }
 
   private void updateCabin(Cabin cabin, long deltaTime) {

@@ -4,6 +4,7 @@ from java.lang import System
 from fecs.model import FloorType
 from org.slf4j import LoggerFactory
 from fecs import Fecs
+from fecs.interfaces import ICircumstance
 
 this={
     "cabin": None,
@@ -39,7 +40,9 @@ def trigger():
             force = (engine.mass(cabin) * engine.getGravity()) - engine.getForceBreak()
             if force * (curtime - this["firstTime"]) > 8333.33:
                 cabin.killPassengers()
+
             cabin.enable()
             this["firstCalled"] = False
+            engine.setState(engine.getState() & 0x00000001)
 
         this["lastUpdateTime"] = curtime
