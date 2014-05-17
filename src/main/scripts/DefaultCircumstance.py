@@ -1,12 +1,15 @@
 __author__ = 'Byoungwoo'
 
-this={}
+this={"validate": False,
+      "floor":None
+}
 
 def setParameter(key,val):
     if key in  this : this[key]=val
 
 def trigger():
     #global variables
+    global engine, passengerMaker
     if 'passengerMaker' or 'engine' not in globals() : return
     passengerMaker = globals()["passengerMaker"]
     engine = globals()["engine"]
