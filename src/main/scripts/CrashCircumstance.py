@@ -4,6 +4,7 @@ import __init__
 
 this={
     "cabin": None,
+    "deltaTime": None,
     "firstCalled": False
 }
 logger = __init__.LoggerFactory.getLogger("fecs.CrashCircumstance")
@@ -18,25 +19,28 @@ def trigger():
     engine = __init__.Fecs.getApplicationContext().getBean("engine")
 
     cabin = this["cabin"]
+    deltaTime = this["deltaTime"]
 
     if not this["firstCalled"]:
         cabin.disable()
         this["firstCalled"] = True
-        this["lastUpdateTime"] = this["firstTime"] = System.currentTimeMillis()
+        this["totalTime"] = 0.0
         logger.trace("CALL first trigger")
     else:
+        this["totalTime"] += deltaTime
         logger.trace("TRIGGER progress")
+        engine.updateCabin(cabin, engine.getGravity(), deltaTime);
+        logger.trace("cabin.position: {}", cabin.getPosition())
 
-        curtime = System.currentTimeMillis()
-        deltaTime = curtime - this["lastUpdateTime"]
-        cabin.setPosition(cabin.getPosition() + (0.5 * engine.getGravity() * deltaTime * deltaTime));
+        if cabin.getPosition() >= engine.getFloors().get(FloorType.UNDER_FIRST).getPosition():
+            cabin.setPosition(engine.getFloors().get(FloorType.UNDER_FIRST).getPosition())
 
-        if cabin.getPosition() >= engine.getFloors().get(__init__.FloorType.UNDER_FIRST).getPosition():
-            cabin.setPosition(engine.getFloors().get(__init__.FloorType.UNDER_FIRST).getPosition())
             force = (engine.mass(cabin) * engine.getGravity()) - engine.getForceBreak()
-            if force * (curtime - this["firstTime"]) > 8333.33:
+            logger.trace("force: {}", force)
+            if force * this["totalTime"] > 8333.33:
                 cabin.killPassengers()
 
+            cabin.stop()
             cabin.enable()
             this["firstCalled"] = False
             engine.setState(engine.getState() & 0x00000001)

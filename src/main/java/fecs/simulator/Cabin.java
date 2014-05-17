@@ -18,8 +18,9 @@ public class Cabin extends Place implements Serializable {
   private State state = State.STOP;
   private Floor target = null;
   private fecs.model.Vector vector = null;
+  private double velocity = 0.0;
 
-  private void move(Floor floor, State state) {
+  private void move(Floor floor) {
     if (State.MOVE.equals(state)) {
       queue.add(floor);
     } else {
@@ -29,14 +30,23 @@ public class Cabin extends Place implements Serializable {
     }
   }
 
-  public void next() {
-    this.move(queue.poll(), State.STOP);
+  public void move() {
+    this.move(queue.poll());
   }
 
   public void stop() {
     this.state = State.STOP;
     this.vector = null;
     this.target = null;
+    this.velocity = 0;
+  }
+
+  public double getVelocity() {
+    return velocity;
+  }
+
+  public void setVelocity(double velocity) {
+    this.velocity = velocity;
   }
 
   public PriorityQueue<Floor> getQueue() {
@@ -44,7 +54,7 @@ public class Cabin extends Place implements Serializable {
   }
 
   public void setTarget(Floor floor) {
-    move(floor, this.state);
+    move(floor);
   }
 
   public State getState() {

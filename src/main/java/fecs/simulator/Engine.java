@@ -59,7 +59,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   public void run() {
     try {
       Long currentTime = System.currentTimeMillis();
-      double deltaTime = (lastUpdateTime = System.currentTimeMillis() - lastUpdateTime) * 0.001;
+      double deltaTime = (currentTime - lastUpdateTime) * 0.001;
 
         int s = state & 1; //get last bit
         if (s == Engine.STATE_START) { //last bit is 1 = started
@@ -67,6 +67,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
           if (s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
           Circumstance.get(Circumstance.CircumstanceVector[s])
               .setParameter("currentTime", currentTime)
+              .setParameter("deltaTime", deltaTime)
               .trigger();
           for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
         }
@@ -130,6 +131,12 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       renderer.flush();
   }
 
+  public void updateCabin(Cabin cabin, double accel, double deltaTime) {
+    double v1 = accel * deltaTime;
+    cabin.setPosition(cabin.getPosition() + (cabin.getVelocity() * deltaTime + 0.5 * (v1 * deltaTime)) * 16.6667);
+    cabin.setVelocity(cabin.getVelocity() + v1);
+  }
+
   private void updateCabin(Cabin cabin, double deltaTime) {
     if (cabin.isOn()) {
       Vector vector = cabin.getVector();
@@ -139,15 +146,14 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       Floor target = cabin.getTarget();
       switch (cabin.getState()) {
         case MOVE:
-          cabin.setPosition(cabin.getPosition() + (accel * deltaTime * deltaTime * 0.5)); // d = (at^2)/2
+          updateCabin(cabin, accel, deltaTime);
           if ((vector == Vector.DOWN && cabin.getPosition() > target.getPosition())
               || (vector == Vector.UP && cabin.getPosition() < target.getPosition())) {
             cabin.setPosition(target.getPosition());
+            cabin.stop();
 
-            if (cabin.getQueue().isEmpty()) {
-              cabin.stop();
-            } else {
-              cabin.next();
+            if (!cabin.getQueue().isEmpty()) {
+              cabin.move();
             }
           }
           break;
