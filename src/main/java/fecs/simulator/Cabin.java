@@ -11,7 +11,7 @@ public class Cabin extends Place implements Serializable {
   public static final int WIDTH = 50;
   public static final int HEIGHT = 50;
 
-  private PriorityQueue<Floor> queue = new PriorityQueue<>(new TreeSet<>(new NextSetComparator()));
+  private Queue<Floor> queue = new LinkedList<>();
 
   private boolean on = false;
 
@@ -49,7 +49,7 @@ public class Cabin extends Place implements Serializable {
     this.velocity = velocity;
   }
 
-  public PriorityQueue<Floor> getQueue() {
+  public Queue<Floor> getQueue() {
     return queue;
   }
 
@@ -83,14 +83,6 @@ public class Cabin extends Place implements Serializable {
 
   public boolean isOn() {
     return on;
-  }
-
-  private static class NextSetComparator implements Comparator<Floor> {
-
-    @Override
-    public int compare(Floor o1, Floor o2) {
-      return o1.getNum() - o2.getNum();
-    }
   }
 
   public static enum State {

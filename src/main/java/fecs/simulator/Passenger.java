@@ -40,6 +40,30 @@ public class Passenger extends Place implements Serializable {
     this.dest = dest;
   }
 
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Passenger passenger = (Passenger) o;
+
+    if (dest != null ? !dest.equals(passenger.dest) : passenger.dest != null) return false;
+    if (start != null ? !start.equals(passenger.start) : passenger.start != null) return false;
+    if (state != passenger.state) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = state != null ? state.hashCode() : 0;
+    result = 31 * result + (dest != null ? dest.hashCode() : 0);
+    result = 31 * result + (start != null ? start.hashCode() : 0);
+    return result;
+  }
+
+
   public static enum State {
     WAIT,
     RIDING,

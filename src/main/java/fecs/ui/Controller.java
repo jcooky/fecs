@@ -57,10 +57,15 @@ public class Controller {
       String answer = JOptionPane.showInputDialog("what cabin? (LEFT, RIGHT)");
       Cabin crashCabin = engine.getCabins().get(CabinType.valueOf(answer));
 
-      Circumstance.get(ICircumstance.CRASH).setParameter("cabin", crashCabin).trigger();
+      Circumstance.get(ICircumstance.CRASH)
+          .setParameter("validate", false)
+          .setParameter("cabin", crashCabin)
+          .trigger();
 
       state = ICircumstance.STATE_CRASH;
     } else if (ICircumstance.EARTH_QUAKE.equals(name)) {
+      Circumstance.get(ICircumstance.EARTH_QUAKE).setParameter("startTime", System.currentTimeMillis());
+
       state = ICircumstance.STATE_EARTH_QUAKE;
     } else if (ICircumstance.FLOOD.equals(name)) {
       state = ICircumstance.STATE_FLOOD;

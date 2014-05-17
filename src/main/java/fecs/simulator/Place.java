@@ -1,13 +1,13 @@
 package fecs.simulator;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by jcooky on 2014. 5. 16..
  */
 public class Place {
-  protected Set<Passenger> passengers=new TreeSet<Passenger>();
+  protected Set<Passenger> passengers=new HashSet<>();
   protected double position;
   protected String name;
 
