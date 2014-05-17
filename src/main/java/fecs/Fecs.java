@@ -52,6 +52,8 @@ public class Fecs implements CommandLineRunner{
     interp.execfile("__init__.py");
     interp.set("engine",engine);
     interp.set("passengerMaker",passengerMaker);
+    interp.exec("DefaultCircumstance.engine=engine");
+    interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
   }
 
   public static ApplicationContext getApplicationContext() { return applicationContext; }

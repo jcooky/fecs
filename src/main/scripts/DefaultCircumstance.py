@@ -12,19 +12,20 @@ def setParameter(key,val):
 
 def trigger():
     #global variables
-    global engine, passengerMaker,out
-    if 'passengerMaker' or 'engine' not in globals() : return
-
-    out.println("triggered")
-
-    #module variables
-    if 'cabinWait' not in this : this['cabinWait'] = [1000,1000]
-    # __builtins__[""]
-
-    passengerMaker.makePassenger()
-    cabins = engine.getCabins()
-    for i, cabin in enumerate(cabins):
-        if not cabin.getQueue().isEmpty(): return
+    global passengerMaker, engine
+    out = __init__.out
+    if 'passengerMaker' or 'engine' not in globals() :
+        out.println('global variables not set')
+        return
+    #
+    # #module variables
+    # if 'cabinWait' not in this : this['cabinWait'] = [1000,1000]
+    # # __builtins__[""]
+    #
+    # passengerMaker.makePassenger()
+    # cabins = engine.getCabins()
+    # for i, cabin in enumerate(cabins):
+    #     if not cabin.getQueue().isEmpty(): return
             # if this["cabinWait"][i]<=0 :
             #     cabin.enable()
             #     this["cabinWait"][i]=1000

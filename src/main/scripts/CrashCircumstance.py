@@ -1,16 +1,12 @@
 __author__ = 'Byoungwoo'
 
-from java.lang import System
-from fecs.model import FloorType
-from org.slf4j import LoggerFactory
-from fecs import Fecs
-from fecs.interfaces import ICircumstance
+import __init__
 
 this={
     "cabin": None,
     "firstCalled": False
 }
-logger = LoggerFactory.getLogger("fecs.CrashCircumstance")
+logger = __init__.LoggerFactory.getLogger("fecs.CrashCircumstance")
 
 def setParameter(key,val):
     if key in  this : this[key]=val
@@ -19,7 +15,7 @@ def setParameter(key,val):
 def trigger():
     logger.debug("CALL trigger")
 
-    engine = Fecs.getApplicationContext().getBean("engine")
+    engine = DefaultCircumstance.engine
 
     cabin = this["cabin"]
 
