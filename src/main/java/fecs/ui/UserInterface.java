@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by jcooky on 2014. 3. 22..
  */
-@Component
+@Component("userInterface")
 public class UserInterface extends JFrame implements Runnable {
 
   private JButton startSim;
@@ -144,26 +144,48 @@ public class UserInterface extends JFrame implements Runnable {
       @Override
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.EARTH_QUAKE);
+
+        startFail(earthQuake);
       }
     });
     fire.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.FIRE);
+
+        startFail(fire);
       }
     });
     flood.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.FLOOD);
+
+        startFail(flood);
       }
     });
     crash.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.CRASH);
+
+        startFail(crash);
       }
     });
+  }
+
+  private void startFail(JButton btn) {
+    earthQuake.setEnabled(false);
+    fire.setEnabled(false);
+    flood.setEnabled(false);
+    crash.setEnabled(false);
+  }
+
+  public void endFail() {
+    earthQuake.setEnabled(true);
+    fire.setEnabled(true);
+    flood.setEnabled(true);
+    crash.setEnabled(true);
   }
 
   public Renderer getRenderer() { return renderer; }

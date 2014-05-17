@@ -5,6 +5,9 @@ import fecs.model.FloorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Byoungwoo on 2014-05-13.
  */
@@ -16,6 +19,8 @@ public class PassengerMaker implements IPassengerMaker {
   private Integer now = 0, howMany = 10, max = 30;
 
   private Long lastUpdateTime = null;
+
+  private List<Passenger> passengers = new ArrayList<>();
 
   /* getters and setters */
   public Integer getNow() {
@@ -40,6 +45,21 @@ public class PassengerMaker implements IPassengerMaker {
 
   public void setHowMany(Integer val) {
     howMany = val;
+  }
+
+  public void killRandom() {
+    int i = (int)(Math.random() * passengers.size());
+    Passenger passenger = passengers.get(i);
+
+    for (Cabin cabin : engine.getCabins().values()) {
+      cabin.getPassengers().remove(passenger);
+    }
+
+    for (Floor floor : engine.getFloors().values()) {
+      floor.getPassengers().remove(passenger);
+    }
+
+    this.passengers.remove(i);
   }
 
   public void makePassenger() {
