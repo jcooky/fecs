@@ -13,7 +13,7 @@ public class Cabin extends Place implements Serializable {
 
   private PriorityQueue<Floor> queue = new PriorityQueue<>(new TreeSet<>(new NextSetComparator()));
 
-  private boolean isOn = false;
+  private boolean on = false;
 
   private State state = State.STOP;
   private Floor target = null;
@@ -64,11 +64,15 @@ public class Cabin extends Place implements Serializable {
   }
 
   public void disable() {
-    this.isOn = false;
+    this.on = false;
   }
 
   public void enable() {
-    this.isOn = true;
+    this.on = true;
+  }
+
+  public boolean isOn() {
+    return on;
   }
 
   private static class NextSetComparator implements Comparator<Floor> {

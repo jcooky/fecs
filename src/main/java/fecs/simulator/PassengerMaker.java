@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by Byoungwoo on 2014-05-13.
  */
-@Component
+@Component("passengerMaker")
 public class PassengerMaker implements IPassengerMaker {
   @Autowired
   private Engine engine;

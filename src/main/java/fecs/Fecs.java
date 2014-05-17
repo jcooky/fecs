@@ -1,16 +1,15 @@
 package fecs;
 
 import fecs.interfaces.IEngine;
-import fecs.interfaces.IFecs;
 import fecs.interfaces.IPassengerMaker;
 import fecs.ui.UserInterface;
-import org.apache.commons.lang3.ArrayUtils;
-import org.python.core.Py;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,6 +22,8 @@ import java.io.IOException;
 @EnableAutoConfiguration
 @ComponentScan(basePackages = "fecs")
 public class Fecs implements CommandLineRunner{
+  private static ConfigurableApplicationContext applicationContext;
+
   @Autowired
   private UserInterface userInterface;
 
@@ -43,7 +44,7 @@ public class Fecs implements CommandLineRunner{
     SpringApplication app = new SpringApplication(Fecs.class);
     app.setHeadless(false);
 
-    app.run(args);
+    Fecs.applicationContext = app.run(args);
   }
   protected static PythonInterpreter interp= new PythonInterpreter();
   public PythonInterpreter getInterpreter(){return interp;}
@@ -52,4 +53,6 @@ public class Fecs implements CommandLineRunner{
     interp.set("engine",engine);
     interp.set("passengerMaker",passengerMaker);
   }
+
+  public static ApplicationContext getApplicationContext() { return applicationContext; }
 }

@@ -16,6 +16,6 @@ public interface ICircumstance {
 
   public static final int STATE_DEFAULT = 0, STATE_FIRE = 1, STATE_FLOOD = 2, STATE_CRASH = 3, STATE_EARTH_QUAKE = 4;
 
-  public void trigger() throws Exception;
+  public void trigger();
   public Circumstance setParameter(String key,Object val);
 }

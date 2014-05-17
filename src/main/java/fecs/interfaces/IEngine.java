@@ -14,6 +14,8 @@ public interface IEngine {
   static final int STATE_STOP = 0b00,
     STATE_START = 0b01;
 
+  public Double mass(Cabin cabin);
+
   Double getGravity();
   void setGravity(Double gravity);
 

@@ -1,6 +1,9 @@
 package fecs.ui;
 
+import fecs.Circumstance;
 import fecs.interfaces.ICircumstance;
+import fecs.model.CabinType;
+import fecs.simulator.Cabin;
 import fecs.simulator.Engine;
 import fecs.simulator.PassengerMaker;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +35,7 @@ public class Controller {
       return;
     }
 
-    engine.setState(Engine.STATE_START);
+    engine.setState(engine.getState() | Engine.STATE_START);
   }
 
   public void stopSimulation() {
@@ -42,20 +45,20 @@ public class Controller {
       displayError("already stopped");
       return;
     }
-    engine.setState(Engine.STATE_STOP);
+    engine.setState(engine.getState() & Engine.STATE_STOP);
   }
 
   public void triggerFail(String name) {
-    int state = engine.getState() >> 1;
-    String curcimstanceName = ICircumstance.CircumstanceVector[state];
-
-    if (ICircumstance.DEFAULT.equals(curcimstanceName)) {
-
-    }
+    int state;
 
     if (ICircumstance.FIRE.equals(name)) {
       state = ICircumstance.STATE_FIRE;
     } else if (ICircumstance.CRASH.equals(name)) {
+      String answer = JOptionPane.showInputDialog("what cabin? (LEFT, RIGHT)");
+      Cabin crashCabin = engine.getCabins().get(CabinType.valueOf(answer));
+
+      Circumstance.get(ICircumstance.CRASH).setParameter("cabin", crashCabin).trigger();
+
       state = ICircumstance.STATE_CRASH;
     } else if (ICircumstance.EARTH_QUAKE.equals(name)) {
       state = ICircumstance.STATE_EARTH_QUAKE;
