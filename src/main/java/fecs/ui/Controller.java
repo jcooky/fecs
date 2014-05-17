@@ -25,28 +25,33 @@ public class Controller {
   private UserInterface ui;
 
   public void startSimulation() {
-    int state = engine.getState();
+    int state = engine.getState() & 1;
 
-    if ((state & Engine.STATE_START) != 0) {
+    if (Engine.STATE_START == state) {
       displayError("already started");
       return;
     }
 
-    engine.setState(state | Engine.STATE_START);
+    engine.setState(Engine.STATE_START);
   }
 
   public void stopSimulation() {
-    int state = engine.getState();
+    int state = engine.getState() & 1;
 
     if (state == Engine.STATE_STOP) {
       displayError("already stopped");
       return;
     }
-    engine.setState(state & ~(Engine.STATE_START));
+    engine.setState(Engine.STATE_STOP);
   }
 
   public void triggerFail(String name) {
-    int state;
+    int state = engine.getState() >> 1;
+    String curcimstanceName = ICircumstance.CircumstanceVector[state];
+
+    if (ICircumstance.DEFAULT.equals(curcimstanceName)) {
+
+    }
 
     if (ICircumstance.FIRE.equals(name)) {
       state = ICircumstance.STATE_FIRE;
@@ -91,12 +96,11 @@ public class Controller {
         Double passengerWeight = engine.getPassengerWeight();
 
         if (cabinWeight + val * passengerWeight > cabinLimitWeight) {
-          val = (int)(Math.floor((cabinLimitWeight - cabinWeight)/passengerWeight));
+          val = (int) (Math.floor((cabinLimitWeight - cabinWeight) / passengerWeight));
           ui.getCabinLimitPeople().setText(val.toString());
         }
         engine.setCabinLimitPeople(val);
-      }
-      else {
+      } else {
         throw new NumberFormatException();
       }
     } catch (NumberFormatException e) {
