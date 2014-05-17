@@ -52,14 +52,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>2.5.3</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 				<configuration>
 					<failOnError>false</failOnError>
 				</configuration>
@@ -67,14 +59,6 @@
 			<plugin>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>2.12.1</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 				<configuration>
 					<failsOnError>false</failsOnError>
 					<failOnViolation>false</failOnViolation>
