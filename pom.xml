@@ -84,6 +84,13 @@
 				<groupId>org.codehaus.sonar</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>4.3</version>
+				<dependencies>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.30</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>
