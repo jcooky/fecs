@@ -15,6 +15,7 @@ def setParameter(key,val):
 def trigger():
     engine = Fecs.getApplicationContext().getBean("engine")
     passengerMaker = Fecs.getApplicationContext().getBean("passengerMaker")
+    ui = Fecs.getApplicationContext().getBean("userInterface")
 
     currentTime = this["currentTime"]
     startTime = this["startTime"]
@@ -27,6 +28,7 @@ def trigger():
         this["killTime"] += 1000
 
     if currentTime - startTime > 60000:
+        ui.endFail()
         engine.setState(engine.getState() & 1)
         for cabin in engine.getCabins().values():
             cabin.enable()

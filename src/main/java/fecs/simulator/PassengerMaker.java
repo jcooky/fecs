@@ -48,18 +48,20 @@ public class PassengerMaker implements IPassengerMaker {
   }
 
   public void killRandom() {
-    int i = (int)(Math.random() * passengers.size());
-    Passenger passenger = passengers.get(i);
+    if (!passengers.isEmpty()) {
+      int i = (int) (Math.random() * passengers.size());
+      Passenger passenger = passengers.get(i);
 
-    for (Cabin cabin : engine.getCabins().values()) {
-      cabin.getPassengers().remove(passenger);
+      for (Cabin cabin : engine.getCabins().values()) {
+        cabin.getPassengers().remove(passenger);
+      }
+
+      for (Floor floor : engine.getFloors().values()) {
+        floor.getPassengers().remove(passenger);
+      }
+
+      this.passengers.remove(i);
     }
-
-    for (Floor floor : engine.getFloors().values()) {
-      floor.getPassengers().remove(passenger);
-    }
-
-    this.passengers.remove(i);
   }
 
   public void makePassenger() {

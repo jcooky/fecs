@@ -78,6 +78,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     } finally {
+      try {
+        Thread.sleep(1);
+      } catch (InterruptedException e) {
+        logger.error(e.getMessage(), e);
+      }
       SwingUtilities.invokeLater(this);
     }
   }
