@@ -59,7 +59,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   public void run() {
     try {
       Long currentTime = System.currentTimeMillis();
-      double deltaTime = (lastUpdateTime = System.currentTimeMillis() - lastUpdateTime) * 0.001;
+      double deltaTime = (currentTime - lastUpdateTime) * 0.001;
 
         int s = state & 1; //get last bit
         if (s == Engine.STATE_START) { //last bit is 1 = started
@@ -67,6 +67,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
           if (s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
           Circumstance.get(Circumstance.CircumstanceVector[s])
               .setParameter("currentTime", currentTime)
+              .setParameter("deltaTime", deltaTime)
               .trigger();
           for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
         }
