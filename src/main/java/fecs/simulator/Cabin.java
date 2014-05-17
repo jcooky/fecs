@@ -19,7 +19,7 @@ public class Cabin extends Place implements Serializable {
   private Floor target = null;
   private fecs.model.Vector vector = null;
 
-  public void move(Floor floor, State state) {
+  private void move(Floor floor, State state) {
     if (State.MOVE.equals(state)) {
       queue.add(floor);
     } else {
@@ -27,6 +27,10 @@ public class Cabin extends Place implements Serializable {
       target = floor;
       vector = target.position > this.position ? fecs.model.Vector.DOWN : fecs.model.Vector.UP;
     }
+  }
+
+  public void next() {
+    this.move(queue.poll(), State.STOP);
   }
 
   public void stop() {

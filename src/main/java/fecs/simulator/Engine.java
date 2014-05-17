@@ -59,15 +59,17 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     try {
       Long currentTime = System.currentTimeMillis(), deltaTime = lastUpdateTime = System.currentTimeMillis() - lastUpdateTime;
 
-      int s = state & 1; //get last bit
-      if (s == Engine.STATE_START) { //last bit is 1 = started
-        s = (state & ~1)>>1; //get the others bit
-        if(s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
-        Circumstance.get(Circumstance.CircumstanceVector[s]).trigger();
-        for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
+      if (deltaTime >= 50) {
+        int s = state & 1; //get last bit
+        if (s == Engine.STATE_START) { //last bit is 1 = started
+          s = (state & ~1) >> 1; //get the others bit
+          if (s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
+          Circumstance.get(Circumstance.CircumstanceVector[s]).trigger();
+          for (Cabin cabin : cabins.values()) updateCabin(cabin, deltaTime);
+        }
       }
 
-      draw();
+      draw(deltaTime);
 
       lastUpdateTime = currentTime;
     } catch (Exception e) {
@@ -83,42 +85,44 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     this.initCabins();
   }
 
-  private void draw() {
-    Renderer renderer = ui.getRenderer();
-    Graphics g = renderer.getGraphics();
-    JPanel target = ui.getDrawTarget();
+  private void draw(long deltaTime) {
+    if (deltaTime >= 20) {
+      Renderer renderer = ui.getRenderer();
+      Graphics g = renderer.getGraphics();
+      JPanel target = ui.getDrawTarget();
 
-    g.setColor(Color.GRAY);
-    g.fillRect(0, 0, target.getWidth(), target.getHeight());
+      g.setColor(Color.GRAY);
+      g.fillRect(0, 0, target.getWidth(), target.getHeight());
 
-    Cabin cabin = cabins.get(CabinType.LEFT);
-    g.setColor(Color.WHITE);
-    g.fillRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-    g.setColor(Color.BLACK);
-    g.drawRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-
-    cabin = cabins.get(CabinType.RIGHT);
-    g.setColor(Color.WHITE);
-    g.fillRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-    g.setColor(Color.BLACK);
-    g.drawRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-
-    for (Floor floor : floors.values()) {
-      g.setFont(Font.getFont(Font.SANS_SERIF));
+      Cabin cabin = cabins.get(CabinType.LEFT);
       g.setColor(Color.WHITE);
-      g.fillRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
+      g.fillRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
       g.setColor(Color.BLACK);
-      g.drawRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
-      g.drawString(floor.getNum() + "층", 1, (int) floor.getPosition() + 15);
-    }
+      g.drawRect((int) (Floor.WIDTH + 10.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
 
-    renderer.flush();
+      cabin = cabins.get(CabinType.RIGHT);
+      g.setColor(Color.WHITE);
+      g.fillRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+      g.setColor(Color.BLACK);
+      g.drawRect((int) (Floor.WIDTH + 10.0 + Cabin.WIDTH + 30.0), (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+
+      for (Floor floor : floors.values()) {
+        g.setFont(Font.getFont(Font.SANS_SERIF));
+        g.setColor(Color.WHITE);
+        g.fillRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
+        g.setColor(Color.BLACK);
+        g.drawRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
+        g.drawString(floor.getNum() + "층", 1, (int) floor.getPosition() + 15);
+      }
+
+      renderer.flush();
+    }
   }
 
   private void updateCabin(Cabin cabin, long deltaTime) {
     Vector vector = cabin.getVector();
     double motor = motorOutput * (vector==null?0:vector == Vector.DOWN ? 1.0 : -1.0);
-    double accel = (motor + gravity - forceBreak) / (cabinWeight + (passengerWeight * cabin.getPassengers().size()));
+    double accel = (motor + gravity - forceBreak) / ((cabinWeight/earthGravity) + ((passengerWeight/earthGravity) * cabin.getPassengers().size()));
 
     Floor target = cabin.getTarget();
     switch(cabin.getState()) {
@@ -131,7 +135,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
           if (cabin.getQueue().isEmpty()) {
             cabin.stop();
           } else {
-            cabin.move(cabin.getQueue().peek(), Cabin.State.STOP);
+            cabin.next();
           }
         }
         break;
