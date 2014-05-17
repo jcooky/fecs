@@ -1,6 +1,7 @@
 package fecs.simulator;
 
 import fecs.Circumstance;
+import fecs.Fecs;
 import fecs.interfaces.IEngine;
 import fecs.model.CabinType;
 import fecs.model.FloorType;
@@ -57,7 +58,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
 
   @Override
   public void run() {
+
     try {
+      if (Fecs.getApplicationContext() == null)
+        return;
+
       Long currentTime = System.currentTimeMillis();
       double deltaTime = (currentTime - lastUpdateTime) * 0.001;
 

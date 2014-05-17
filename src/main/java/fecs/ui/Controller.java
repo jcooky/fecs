@@ -155,7 +155,8 @@ public class Controller {
         passengerMaker.setMax(val);
         Integer howMany = passengerMaker.getHowMany();
 
-        if (howMany >= val) {
+        if (howMany > val) {
+          displayError();
           changePassengerCreated(numPassengers);
         }
       } else
@@ -174,7 +175,7 @@ public class Controller {
         passengerMaker.setHowMany(val);
         Integer max = passengerMaker.getMax();
 
-        if (val >= max) {
+        if (val > max) {
           displayError();
           changeTotalNumPassengers(numCreatedPerSec);
         }
@@ -190,7 +191,7 @@ public class Controller {
     try {
       Double val = Double.parseDouble(moreEnterProbability);
 
-      if (val > 0) {
+      if (val > 0 && val < 1) {
         engine.setMoreEnterProbability(val);
       } else {
         throw new NumberFormatException();
@@ -245,7 +246,7 @@ public class Controller {
         Double cabinWeight = engine.getCabinWeight();
         Integer cabinLimitPeople = engine.getCabinLimitPeople();
 
-        if (val > cabinLimitPeople * passengerWeight + cabinWeight) {
+        if (val < cabinLimitPeople * passengerWeight + cabinWeight) {
           val = cabinLimitPeople * passengerWeight + cabinWeight;
           ui.getCabinLimitWeight().setText(val.toString());
         }
@@ -262,11 +263,11 @@ public class Controller {
     }
   }
 
-  private void displayError() {
+  public void displayError() {
     displayError("Error");
   }
 
-  private void displayError(String message) {
+  public void displayError(String message) {
     JOptionPane.showMessageDialog(null, StringUtils.defaultIfEmpty(message, "Error"));
   }
 }
