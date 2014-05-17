@@ -60,7 +60,7 @@ public class Controller {
       state = ICircumstance.STATE_DEFAULT;
     }
 
-    engine.setState((state << 1) | (engine.getState() & 0x000000ff));
+    engine.setState((state << 1) | (engine.getState() & 0x00000001));
   }
 
   public void changeGravity(String gravity) {

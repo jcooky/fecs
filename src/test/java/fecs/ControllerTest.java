@@ -1,6 +1,7 @@
 package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
+import fecs.interfaces.ICircumstance;
 import fecs.simulator.Engine;
 import fecs.ui.Controller;
 import org.junit.Before;
@@ -9,6 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Autowired
@@ -35,7 +39,12 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
 
   @Test
   public void testTriggerFail() throws Exception {
+    // when
+    when(engine.getState()).thenReturn(1);
+    controller.triggerFail(ICircumstance.EARTH_QUAKE);
 
+    // then
+    verify(engine).setState(0x09);
   }
 
   @Test
