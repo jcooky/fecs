@@ -1,10 +1,11 @@
 __author__ = 'Byoungwoo'
 
-from fecs.interfaces import IFecs
-
 def setParameter(key,val):
-    vars()[key]=val
+    __builtins__[key]=val
 
 def trigger():
-    vars()[time]-=1
+    #global variables
+    if 'passengerMaker' or 'engine' not in globals() : return
+    passengerMaker = globals()["passengerMaker"]
+    engine = globals()["engine"]
     pass
