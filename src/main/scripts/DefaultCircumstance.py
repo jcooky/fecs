@@ -17,7 +17,7 @@ def trigger():
     passengerMaker.makePassenger()
     cabins = engine.getCabins()
     for i, cabin in enumerate(cabins):
-        if not cabin.getQueue().isEmpty():
+        if not cabin.getQueue().isEmpty(): return
             # if this["cabinWait"][i]<=0 :
             #     cabin.enable()
             #     this["cabinWait"][i]=1000

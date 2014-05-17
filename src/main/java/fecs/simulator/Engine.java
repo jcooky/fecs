@@ -149,11 +149,10 @@ public class Engine implements IEngine, Runnable, InitializingBean {
           if ((vector == Vector.DOWN && cabin.getPosition() > target.getPosition())
               || (vector == Vector.UP && cabin.getPosition() < target.getPosition())) {
             cabin.setPosition(target.getPosition());
+            cabin.stop();
 
-            if (cabin.getQueue().isEmpty()) {
-              cabin.stop();
-            } else {
-              cabin.next();
+            if (!cabin.getQueue().isEmpty()) {
+              cabin.move();
             }
           }
           break;

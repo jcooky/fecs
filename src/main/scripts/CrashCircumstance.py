@@ -36,10 +36,13 @@ def trigger():
 
         if cabin.getPosition() >= engine.getFloors().get(FloorType.UNDER_FIRST).getPosition():
             cabin.setPosition(engine.getFloors().get(FloorType.UNDER_FIRST).getPosition())
+
             force = (engine.mass(cabin) * engine.getGravity()) - engine.getForceBreak()
+            logger.trace("force: {}", force)
             if force * this["totalTime"] > 8333.33:
                 cabin.killPassengers()
 
+            cabin.stop()
             cabin.enable()
             this["firstCalled"] = False
             engine.setState(engine.getState() & 0x00000001)
