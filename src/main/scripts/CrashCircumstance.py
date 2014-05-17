@@ -1,24 +1,22 @@
 __author__ = 'Byoungwoo'
 
-from fecs.model import FloorType
-from org.slf4j import LoggerFactory
-from fecs import Fecs
-from fecs.interfaces import ICircumstance
+import __init__
 
-this = {
+this={
     "cabin": None,
     "deltaTime": None,
     "firstCalled": False,
     "validate": False
 }
-logger = LoggerFactory.getLogger("fecs.CrashCircumstance")
+logger = __init__.LoggerFactory.getLogger("fecs.CrashCircumstance")
 
 def setParameter(key, val):
     if key in this: this[key] = val
 
 def trigger():
-
-    engine = Fecs.getApplicationContext().getBean("engine")
+    logger.debug("CALL trigger")
+    System = __init__.System
+    engine = __init__.Fecs.getApplicationContext().getBean("engine")
 
     validate = this["validate"]
     deltaTime = this["deltaTime"]
@@ -56,4 +54,3 @@ def trigger():
                 engine.setState((ICircumstance.STATE_CRASH << 1) | (engine.getState() & 1))
                 trigger()
                 break
-

@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by jcooky on 2014. 5. 16..
  */
 public class Place {
-  protected Set<Passenger> passengers=new HashSet<>();
+  protected Set<Passenger> passengers=new HashSet<Passenger>();
   protected double position;
   protected String name;
 
