@@ -20,7 +20,7 @@ public class Cabin extends Place implements Serializable {
   private fecs.model.Vector vector = null;
   private double velocity = 0.0;
 
-  private void move(Floor floor) {
+  public void move(Floor floor) {
     if (State.MOVE.equals(state)) {
       queue.add(floor);
     } else {
@@ -54,7 +54,7 @@ public class Cabin extends Place implements Serializable {
   }
 
   public void setTarget(Floor floor) {
-    move(floor);
+    this.target = floor;
   }
 
   public State getState() {
@@ -68,6 +68,8 @@ public class Cabin extends Place implements Serializable {
   public fecs.model.Vector getVector() {
     return vector;
   }
+
+  public void setVector(fecs.model.Vector vector) { this.vector = vector; }
 
   public Floor getTarget() {
     return target;

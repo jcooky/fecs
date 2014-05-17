@@ -45,7 +45,7 @@ public class Controller {
       displayError("already stopped");
       return;
     }
-    engine.setState(engine.getState() & Engine.STATE_STOP);
+    engine.setState(engine.getState() & (~Engine.STATE_START));
   }
 
   public void triggerFail(String name) {
@@ -68,6 +68,8 @@ public class Controller {
 
       state = ICircumstance.STATE_EARTH_QUAKE;
     } else if (ICircumstance.FLOOD.equals(name)) {
+      Circumstance.get(ICircumstance.FLOOD).setParameter("startTime", System.currentTimeMillis());
+
       state = ICircumstance.STATE_FLOOD;
     } else {
       state = ICircumstance.STATE_DEFAULT;

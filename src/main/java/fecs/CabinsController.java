@@ -87,7 +87,7 @@ public class CabinsController {
       // 한 쪽 만 멈춰 있는 경우
       cabin = Cabin.State.STOP.equals(left.getState()) ? left : right;
     }
-    cabin.setTarget(floor);
+    cabin.move(floor);
   }
 
 }
