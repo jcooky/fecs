@@ -14,8 +14,8 @@ def setParameter(key,val):
 
 def trigger():
     logger.debug("CALL trigger")
-
-    engine = DefaultCircumstance.engine
+    System = __init__.System
+    engine = __init__.Fecs.getApplicationContext().getBean("engine")
 
     cabin = this["cabin"]
 
@@ -31,8 +31,8 @@ def trigger():
         deltaTime = curtime - this["lastUpdateTime"]
         cabin.setPosition(cabin.getPosition() + (0.5 * engine.getGravity() * deltaTime * deltaTime));
 
-        if cabin.getPosition() >= engine.getFloors().get(FloorType.UNDER_FIRST).getPosition():
-            cabin.setPosition(engine.getFloors().get(FloorType.UNDER_FIRST).getPosition())
+        if cabin.getPosition() >= engine.getFloors().get(__init__.FloorType.UNDER_FIRST).getPosition():
+            cabin.setPosition(engine.getFloors().get(__init__.FloorType.UNDER_FIRST).getPosition())
             force = (engine.mass(cabin) * engine.getGravity()) - engine.getForceBreak()
             if force * (curtime - this["firstTime"]) > 8333.33:
                 cabin.killPassengers()
