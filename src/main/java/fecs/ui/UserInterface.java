@@ -1,5 +1,6 @@
 package fecs.ui;
 
+import fecs.interfaces.ICircumstance;
 import fecs.simulator.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,10 @@ public class UserInterface extends JFrame implements Runnable {
   private JTextField cabinLimitWeight;
   private JPanel drawTarget;
   private JComboBox planetCombo;
+  private JButton earthQuake;
+  private JButton fire;
+  private JButton flood;
+  private JButton crash;
 
   @Autowired
   private Controller controller;
@@ -133,6 +138,30 @@ public class UserInterface extends JFrame implements Runnable {
           gravity.setEnabled(false);
           gravity.setText(Engine.gravityTable[planetCombo.getSelectedIndex()].toString());
         }
+      }
+    });
+    earthQuake.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.triggerFail(ICircumstance.EARTH_QUAKE);
+      }
+    });
+    fire.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.triggerFail(ICircumstance.FIRE);
+      }
+    });
+    flood.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.triggerFail(ICircumstance.FLOOD);
+      }
+    });
+    crash.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        controller.triggerFail(ICircumstance.CRASH);
       }
     });
   }

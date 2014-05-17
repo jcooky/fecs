@@ -1,7 +1,8 @@
 package fecs.ui;
 
-import fecs.simulator.PassengerMaker;
+import fecs.interfaces.ICircumstance;
 import fecs.simulator.Engine;
+import fecs.simulator.PassengerMaker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,7 +46,21 @@ public class Controller {
   }
 
   public void triggerFail(String name) {
+    int state;
 
+    if (ICircumstance.FIRE.equals(name)) {
+      state = ICircumstance.STATE_FIRE;
+    } else if (ICircumstance.CRASH.equals(name)) {
+      state = ICircumstance.STATE_CRASH;
+    } else if (ICircumstance.EARTH_QUAKE.equals(name)) {
+      state = ICircumstance.STATE_EARTH_QUAKE;
+    } else if (ICircumstance.FLOOD.equals(name)) {
+      state = ICircumstance.STATE_FLOOD;
+    } else {
+      state = ICircumstance.STATE_DEFAULT;
+    }
+
+    engine.setState((state << 1) | (engine.getState() & 0x000000ff));
   }
 
   public void changeGravity(String gravity) {
