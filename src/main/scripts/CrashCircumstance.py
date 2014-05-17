@@ -17,6 +17,8 @@ def trigger():
     logger.debug("CALL trigger")
     System = __init__.System
     engine = __init__.Fecs.getApplicationContext().getBean("engine")
+    FloorType = __init__.FloorType
+
 
     validate = this["validate"]
     deltaTime = this["deltaTime"]
@@ -44,13 +46,13 @@ def trigger():
                 cabin.enable()
                 this["firstCalled"] = False
                 engine.setState(engine.getState() & 0x00000001)
-                Fecs.getApplicationContext().getBean("userInterface").endFail()
+                __init__.Fecs.getApplicationContext().getBean("userInterface").endFail()
     else:
         this["validate"] = False
         cabins = engine.getCabins()
         for cabin in cabins.values():
             if cabin.getPassengers().size() * engine.getPassengerWeight() + engine.getCabinWeight() >= engine.getCabinLimitWeight():
                 this["cabin"] = cabin
-                engine.setState((ICircumstance.STATE_CRASH << 1) | (engine.getState() & 1))
+                engine.setState((__init__.ICircumstance.STATE_CRASH << 1) | (engine.getState() & 1))
                 trigger()
                 break
