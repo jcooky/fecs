@@ -21,7 +21,7 @@ public class Floor extends Place implements Serializable {
   public void add(Passenger passenger) {
     Vector vector = passenger.getDest() > passenger.getStart() ? Vector.UP : Vector.DOWN;
 
-    getPassengers().add(passenger);
+    super.passengers.add(passenger);
   }
 
   public boolean containsHeight(int y, int height) {

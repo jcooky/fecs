@@ -5,15 +5,18 @@ import java.io.Serializable;
 /**
  * Created by jcooky on 2014. 3. 23..
  */
-public class Passenger extends Place implements Serializable {
+public class Passenger implements Serializable {
 
   private State state = State.WAIT;
   private Integer dest;
   private Integer start;
+//  static int curId=0;
+//  private int id;
 
-  public Passenger(Integer dest, Integer start) {
+  public Passenger(Integer start, Integer dest) {
     this.dest = dest;
     this.start = start;
+//    this.id=curId++;
   }
 
   public Integer getStart() {
@@ -69,4 +72,9 @@ public class Passenger extends Place implements Serializable {
     RIDING,
     NO_WAIT
   }
+
+/*  @Override
+  public int hashCode(){
+    return this.id;
+  }*/
 }
