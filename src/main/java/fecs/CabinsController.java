@@ -9,7 +9,7 @@ import fecs.model.Vector;
 */
 public class CabinsController {
 
-  public void control(Cabin left, Cabin right, Floor floor) {
+  public static void control(Cabin left, Cabin right, Floor floor) {
     Cabin cabin = null;
     double dy_l = floor.getPosition() - left.getPosition(), dy_r = floor.getPosition() - right.getPosition();
     if (Cabin.State.STOP.equals(left.getState()) && Cabin.State.STOP.equals(right.getState())) {

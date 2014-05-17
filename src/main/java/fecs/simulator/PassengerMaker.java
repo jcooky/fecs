@@ -46,10 +46,9 @@ public class PassengerMaker implements IPassengerMaker {
     for (int i = 0; i < howMany; ++i) {
       FloorType start, dest;
 
-      do {
-        start = FloorType.values()[(int) (Math.random() * FloorType.values().length)];
-        dest = FloorType.values()[(int) (Math.random() * FloorType.values().length)];
-      } while (start == dest);
+      start = FloorType.FIRST;
+      int rand =(int) (Math.random() * FloorType.values().length-1);
+      dest = FloorType.values()[rand>0?rand+1:rand];
 
       Passenger passenger = new Passenger(start.getValue(), dest.getValue());
 

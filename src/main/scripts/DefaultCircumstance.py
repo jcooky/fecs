@@ -1,15 +1,22 @@
 __author__ = 'Byoungwoo'
 
-this={}
+import __init__
+
+this={
+    "validate": False,
+    "floor":None
+}
 
 def setParameter(key,val):
     if key in  this : this[key]=val
 
 def trigger():
     #global variables
+    global engine, passengerMaker,out
     if 'passengerMaker' or 'engine' not in globals() : return
-    passengerMaker = globals()["passengerMaker"]
-    engine = globals()["engine"]
+
+    out.println("triggered")
+
     #module variables
     if 'cabinWait' not in this : this['cabinWait'] = [1000,1000]
     # __builtins__[""]
