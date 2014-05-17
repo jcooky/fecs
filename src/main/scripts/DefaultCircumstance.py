@@ -4,8 +4,7 @@ import __init__
 
 this={
     "validate": False,
-    "floor":None,
-    "cabinWait":1000
+    "floor":None
 }
 
 def setParameter(key,val):
@@ -15,10 +14,16 @@ def trigger():
     #global variables
     global passengerMaker, engine
     out = __init__.out
-    passengerMaker.makePassenger()
-    cabins = engine.getCabins()
-    floors = engine.getFloors()
-    floors.get(__init__.FloorTypes.FIRST)
+    if 'passengerMaker' or 'engine' not in globals() :
+        out.println('global variables not set')
+        return
+    #
+    # #module variables
+    # if 'cabinWait' not in this : this['cabinWait'] = [1000,1000]
+    # # __builtins__[""]
+    #
+    # passengerMaker.makePassenger()
+    # cabins = engine.getCabins()
     # for i, cabin in enumerate(cabins):
     #     if not cabin.getQueue().isEmpty(): return
             # if this["cabinWait"][i]<=0 :
