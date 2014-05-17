@@ -58,9 +58,9 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   @Override
   public void run() {
     try {
-      Long currentTime = System.currentTimeMillis(), deltaTime = lastUpdateTime = System.currentTimeMillis() - lastUpdateTime;
+      Long currentTime = System.currentTimeMillis();
+      double deltaTime = (lastUpdateTime = System.currentTimeMillis() - lastUpdateTime) * 0.001;
 
-      if (deltaTime >= 50) {
         int s = state & 1; //get last bit
         if (s == Engine.STATE_START) { //last bit is 1 = started
           s = (state & ~1) >> 1; //get the others bit
@@ -72,7 +72,6 @@ public class Engine implements IEngine, Runnable, InitializingBean {
         }
 
         lastUpdateTime = currentTime;
-      }
 
       draw();
     } catch (Exception e) {
@@ -131,7 +130,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       renderer.flush();
   }
 
-  private void updateCabin(Cabin cabin, long deltaTime) {
+  private void updateCabin(Cabin cabin, double deltaTime) {
     if (cabin.isOn()) {
       Vector vector = cabin.getVector();
       double motor = motorOutput * (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);
@@ -140,7 +139,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       Floor target = cabin.getTarget();
       switch (cabin.getState()) {
         case MOVE:
-          cabin.setPosition(cabin.getPosition() + (accel * deltaTime * deltaTime) / 2.0); // d = (at^2)/2
+          cabin.setPosition(cabin.getPosition() + (accel * deltaTime * deltaTime * 0.5)); // d = (at^2)/2
           if ((vector == Vector.DOWN && cabin.getPosition() > target.getPosition())
               || (vector == Vector.UP && cabin.getPosition() < target.getPosition())) {
             cabin.setPosition(target.getPosition());
