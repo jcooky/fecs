@@ -1,7 +1,10 @@
 __author__ = 'Byoungwoo'
 
+this={}
+
 def setParameter(key,val):
-    __builtins__[key]=val
+    if key in  this : this[key]=val
+
 
 def trigger():
     #global variables
