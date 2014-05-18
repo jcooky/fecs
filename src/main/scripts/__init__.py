@@ -3,8 +3,8 @@ __author__ = 'Byoungwoo'
 #global imports
 
 from org.slf4j import LoggerFactory
-from fecs import Fecs
 from fecs import Fecs, CabinsController
+from fecs.simulator import Passenger
 from fecs.model import CabinType, FloorType, Vector
 from fecs.interfaces import ICircumstance
 

@@ -37,15 +37,18 @@ def trigger():
             if cabin.getPosition() >= engine.getFloors().get(FloorType.UNDER_FIRST).getPosition():
                 cabin.setPosition(engine.getFloors().get(FloorType.UNDER_FIRST).getPosition())
 
-                force = (engine.mass(cabin) * engine.getGravity()) - engine.getForceBreak()
-                logger.debug("force: {}", force)
-                if force * this["totalTime"] > 8333.33:
-                    cabin.killPassengers()
+                force = __init__.Math.abs((engine.mass(cabin) * engine.getGravity()) - engine.getForceBreak())
+                impulse = force*this["totalTime"]
+                logger.debug("force: {} impulse: {}", force,impulse)
+                if impulse > 8333.33:
+                    System.out.println("passengers crushed to death cause of crash")
+                cabin.killPassengers()
 
                 cabin.stop()
                 cabin.enable()
                 this["firstCalled"] = False
-                engine.setState(engine.getState() & 0x00000001)
+                this["cabin"] = None
+                engine.setState(__init__.ICircumstance.STATE_DEFAULT << 1 | (engine.getState() & 0x00000001))
                 __init__.Fecs.getApplicationContext().getBean("userInterface").endFail()
     else:
         this["validate"] = False

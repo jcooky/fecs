@@ -18,6 +18,7 @@ def setParameter(key,val):
 def trigger():
     #global variables
     global passengerMaker, engine, crash
+
     #local variables
     out = __init__.System.out
     cabinsController = __init__.CabinsController
@@ -63,10 +64,10 @@ def trigger():
                 # if cabin.getTaget() is not None:
                 #     out.println(cabin.getTarget())
                 #     if cabin.getTarget()==floor:
-                out.println("cabin("+str(cabin)+") arrived on floor("+str(floor.getNum())+")")
+                # out.println("cabin("+str(cabin)+") arrived on floor("+str(floor.getNum())+")")
                 for p in cabin.getPassengers().toArray():
                     if p.getDest()==floor.getNum() :
-                        out.println(str(p)+'wants to take off')
+                        # out.println(str(p)+'wants to take off')
                         cabin.getPassengers().remove(p)
                         passengerMaker.setNow(passengerMaker.getNow()-1)
 
@@ -91,14 +92,15 @@ def trigger():
             # out.println(arrivedCabin.getPassengers().size())
             # out.println(engine.getCabinLimitPeople())
             if firstFloorPassengers.size()+arrivedCabin.getPassengers().size() > engine.getCabinLimitPeople() :
-                out.println("too many passengers. dice roll")
+                # out.println("too many passengers. dice roll")
                 if 1-__init__.Math.random() < engine.getMoreEnterProbability() :
                     out.println("death dice")
                     TakeIn(arrivedCabin,firstFloorPassengers)
-                    crash.setParameter('deltaTime',this["deltaTime"])\
-                        .setParameter('validate', False)\
+                    crash.setParameter('validate',False)\
                         .setParameter('cabin',arrivedCabin)\
                         .trigger()
+                    engine.setState(__init__.ICircumstance.STATE_CRASH << 1 | (engine.getState() & 1))
+                    __init__.Fecs.getApplicationContext().getBean("userInterface").startFail()
 
                 else:
                     out.println("just go dice")
@@ -112,7 +114,7 @@ def trigger():
                     out.println(arrivedCabin.getPassengers().size())
                     cabinGo(arrivedCabin)
             else:
-                out.println("adequate people awaits.")
+                # out.println("adequate people awaits.")
                 # out.println(firstFloorPassengers)
                 TakeIn(arrivedCabin,firstFloorPassengers)
                 cabinGo(arrivedCabin)

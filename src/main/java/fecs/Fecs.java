@@ -57,6 +57,8 @@ public class Fecs implements CommandLineRunner{
     interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
     interp.set("crash", Circumstance.get(ICircumstance.CRASH));
     interp.exec("DefaultCircumstance.crash=crash");
+    interp.set("default", Circumstance.get(ICircumstance.DEFAULT));
+    interp.exec("FireCircumstance.defaultCircumstance=default");
   }
 
   public static ApplicationContext getApplicationContext() { return applicationContext; }

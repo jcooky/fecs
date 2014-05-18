@@ -145,6 +145,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     double v1 = accel * deltaTime;
     cabin.setPosition(cabin.getPosition() + (cabin.getVelocity() * deltaTime + 0.5 * (v1 * deltaTime)) * 16.6667);
     cabin.setVelocity(cabin.getVelocity() + v1);
+
+    double min = floors.get(FloorType.TENTH).getPosition(),
+        max = floors.get(FloorType.UNDER_FIRST).getPosition();
+    if(cabin.getPosition()>max) cabin.setPosition(max);
+    if(cabin.getPosition()<min) cabin.setPosition(min);
   }
 
   private void updateCabin(Cabin cabin, double deltaTime) {
@@ -223,8 +228,12 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   }
 
   public void setState(Integer state) {
-    if ((state | 1) == 1) this.state &= state;
-    this.state = state;
+    Integer st = state & 1;
+    Integer highState = state | ~1;
+    if(highState==0) this.state = (this.state | ~1) | st;
+    else this.state = state;
+//    if ((state | 1) == 1 || (state |)==0) this.state &= state;
+//    this.state = state;
   }
 
   public Double getForceBreak() {

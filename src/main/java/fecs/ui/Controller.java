@@ -3,8 +3,10 @@ package fecs.ui;
 import fecs.Circumstance;
 import fecs.interfaces.ICircumstance;
 import fecs.model.CabinType;
+import fecs.model.FloorType;
 import fecs.simulator.Cabin;
 import fecs.simulator.Engine;
+import fecs.simulator.Floor;
 import fecs.simulator.PassengerMaker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,9 +55,31 @@ public class Controller {
     int state;
 
     if (ICircumstance.FIRE.equals(name)) {
+      ICircumstance c = Circumstance.get(ICircumstance.FIRE).setParameter("validate",false);
+      String answer = JOptionPane.showInputDialog("which floor? (RANDOM,-1,2~10)");
+      if(!answer.equals("RANDOM")) {
+        Integer val;
+        try {
+          val = Integer.parseInt(answer);
+          if (!(val == -1 || (val >= 2 && val <= 10))) {
+            displayError("not in a valid range");
+            return;
+          }
+        } catch (NumberFormatException e) {
+          displayError("not a number");
+          return;
+        }
+        Floor fireFloor = engine.getFloors().get(FloorType.valueOf(answer));
+      }
+      c.trigger();
+
       state = ICircumstance.STATE_FIRE;
     } else if (ICircumstance.CRASH.equals(name)) {
       String answer = JOptionPane.showInputDialog("which cabin? (LEFT, RIGHT)");
+      if(!answer.equals("LEFT") && !answer.equals("RIGHT")){
+        displayError("only 'LEFT' or 'RIGHT' input available");
+        return;
+      }
       Cabin crashCabin = engine.getCabins().get(CabinType.valueOf(answer));
 
       Circumstance.get(ICircumstance.CRASH)
@@ -70,13 +94,13 @@ public class Controller {
       state = ICircumstance.STATE_EARTH_QUAKE;
     } else if (ICircumstance.FLOOD.equals(name)) {
       Circumstance.get(ICircumstance.FLOOD).setParameter("startTime", System.currentTimeMillis());
-      
+
       state = ICircumstance.STATE_FLOOD;
     } else {
       state = ICircumstance.STATE_DEFAULT;
     }
 
-    engine.setState((state << 1) | (engine.getState() & 0x00000001));
+    engine.setState((state << 1) | (engine.getState() & Engine.STATE_START));
   }
 
   public void changeGravity(String gravity) {
