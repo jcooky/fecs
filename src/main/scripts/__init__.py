@@ -9,3 +9,5 @@ from fecs.model import CabinType, FloorType, Vector
 from fecs.interfaces import ICircumstance
 
 from java.lang import System
+
+import CrashCircumstance, DefaultCircumstance, EarthQuakeCircumstance, FireCircumstance, FloodCircumstance

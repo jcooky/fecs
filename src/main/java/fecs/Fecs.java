@@ -49,7 +49,7 @@ public class Fecs implements CommandLineRunner{
   protected static PythonInterpreter interp= new PythonInterpreter();
   public PythonInterpreter getInterpreter(){return interp;}
   private void initJython(){
-    interp.execfile("__init__.py");
+    interp.execfile(ClassLoader.getSystemResourceAsStream("__init__.py"));
     interp.set("engine",engine);
     interp.set("passengerMaker",passengerMaker);
     interp.exec("DefaultCircumstance.engine=engine");
