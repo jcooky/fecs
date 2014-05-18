@@ -150,9 +150,11 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   private void updateCabin(Cabin cabin, double deltaTime) {
     if (cabin.isOn()) {
       Vector vector = cabin.getVector();
+      //up carrying accel = gravity - motor = down carrying accel (by common elevator desgin)
+      /*double motorNewton = motorOutput*0.7/2.5; //(N) = motor(Nm/s)*mechanical effectiveness/const velocity
+      double accel = mass(cabin)*(gravity - motorNewton)* (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);*/
       double motor = motorOutput * (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);
       double accel = (motor) / mass(cabin) + gravity;
-
       Floor target = cabin.getTarget();
       switch (cabin.getState()) {
         case MOVE:
@@ -165,7 +167,8 @@ public class Engine implements IEngine, Runnable, InitializingBean {
             if (!cabin.getQueue().isEmpty()) {
               cabin.move();
             }
-          }
+          }else if(cabin.getPosition()==target.getPosition()) cabin.stop();
+
           break;
         case STOP:
           cabin.stop();

@@ -16,7 +16,7 @@ public class PassengerMaker implements IPassengerMaker {
   @Autowired
   private Engine engine;
 
-  private Integer now = 0, howMany = 10, max = 30;
+  private Integer now = 0, howMany = 1, max = 30;
 
   private Long lastUpdateTime = null;
 
@@ -65,7 +65,7 @@ public class PassengerMaker implements IPassengerMaker {
   }
 
   public void makePassenger() {
-    for (int i = 0; i < howMany; ++i) {
+    for (int i = 0; i < howMany && now< max; ++i) {
       FloorType start, dest;
 
       start = FloorType.FIRST;
@@ -75,9 +75,8 @@ public class PassengerMaker implements IPassengerMaker {
       Passenger passenger = new Passenger(start.getValue(), dest.getValue());
 
       engine.getFloors().get(FloorType.FIRST).add(passenger);
+      now++;
     }
-
-    now += howMany;
   }
 
 }

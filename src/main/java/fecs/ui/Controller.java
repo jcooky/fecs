@@ -34,7 +34,8 @@ public class Controller {
       displayError("already started");
       return;
     }
-
+    fecs.Fecs.getInterpreter().exec("import DefaultCircumstance");
+    fecs.Fecs.getInterpreter().exec("reload (DefaultCircumstance)");
     engine.setState(engine.getState() | Engine.STATE_START);
   }
 
@@ -54,7 +55,7 @@ public class Controller {
     if (ICircumstance.FIRE.equals(name)) {
       state = ICircumstance.STATE_FIRE;
     } else if (ICircumstance.CRASH.equals(name)) {
-      String answer = JOptionPane.showInputDialog("what cabin? (LEFT, RIGHT)");
+      String answer = JOptionPane.showInputDialog("which cabin? (LEFT, RIGHT)");
       Cabin crashCabin = engine.getCabins().get(CabinType.valueOf(answer));
 
       Circumstance.get(ICircumstance.CRASH)
@@ -69,7 +70,7 @@ public class Controller {
       state = ICircumstance.STATE_EARTH_QUAKE;
     } else if (ICircumstance.FLOOD.equals(name)) {
       Circumstance.get(ICircumstance.FLOOD).setParameter("startTime", System.currentTimeMillis());
-
+      
       state = ICircumstance.STATE_FLOOD;
     } else {
       state = ICircumstance.STATE_DEFAULT;

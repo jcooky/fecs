@@ -27,7 +27,7 @@ public abstract class Circumstance implements ICircumstance {
   private PythonInterpreter interp;
   private PyObject pyCircumstance;
   protected Circumstance(String name) {
-    pyCircumstance = Fecs.interp.get(name+"Circumstance");// interp.get(name+"Circumstance");
+    pyCircumstance = Fecs.interp.get(name+"Circumstance");
     this.name = name;
   }
 
@@ -35,9 +35,7 @@ public abstract class Circumstance implements ICircumstance {
     pyCircumstance.__getattr__("trigger").__call__(); //executes .py file
   }
 
-//  Map<String,Object> param=new HashMap<String,Object>();
   public Circumstance setParameter(String key, Object val){
-//    param.put(key,val);
     pyCircumstance.__getattr__("setParameter").__call__(new PyString(key), Py.java2py(val));
     return this;
   }

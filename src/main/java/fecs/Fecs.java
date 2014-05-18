@@ -1,5 +1,6 @@
 package fecs;
 
+import fecs.interfaces.ICircumstance;
 import fecs.interfaces.IEngine;
 import fecs.interfaces.IPassengerMaker;
 import fecs.ui.UserInterface;
@@ -47,13 +48,15 @@ public class Fecs implements CommandLineRunner{
     Fecs.applicationContext = app.run(args);
   }
   protected static PythonInterpreter interp= new PythonInterpreter();
-  public PythonInterpreter getInterpreter(){return interp;}
+  public static PythonInterpreter getInterpreter(){return interp;}
   private void initJython(){
     interp.execfile(ClassLoader.getSystemResourceAsStream("__init__.py"));
-    interp.set("engine",engine);
+    interp.set("engine", engine);
     interp.set("passengerMaker",passengerMaker);
     interp.exec("DefaultCircumstance.engine=engine");
     interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
+    interp.set("crash", Circumstance.get(ICircumstance.CRASH));
+    interp.exec("DefaultCircumstance.crash=crash");
   }
 
   public static ApplicationContext getApplicationContext() { return applicationContext; }
