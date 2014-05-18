@@ -27,6 +27,7 @@ def trigger():
             else :rand+=1
             this["floor"] = floors.get(FloorType.valueOf(rand))
         out.println("fire circumstance started with floor "+str(this["floor"].getNum()))
+        this["floor"].killPassengers()
         fireFighter=__init__.Passenger(1,this["floor"].getNum())
         out.println(fireFighter)
         floors.get(FloorType.FIRST).getPassengers().add(fireFighter)

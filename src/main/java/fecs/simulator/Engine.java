@@ -2,6 +2,7 @@ package fecs.simulator;
 
 import fecs.Circumstance;
 import fecs.Fecs;
+import fecs.interfaces.ICircumstance;
 import fecs.interfaces.IEngine;
 import fecs.model.CabinType;
 import fecs.model.FloorType;
@@ -48,7 +49,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   private Map<CabinType, Cabin> cabins = new EnumMap<>(CabinType.class);
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
   private Double cabinWeight = 700d;
-  private Integer state = STATE_STOP;
+  private Integer state = (ICircumstance.STATE_DEFAULT <<1);
   private Double forceBreak = 10000d;
   private Double motorOutput = 27000d;
   private Integer cabinLimitPeople = 12;
@@ -68,7 +69,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
 
         int s = state & 1; //get last bit
         if (s == Engine.STATE_START) { //last bit is 1 = started
-          s = (state & ~1) >> 1; //get the others bit
+          s = ((state & ~1) >> 1) - 1; //get the others bit, subtract to match index
           if (s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
           Circumstance.get(Circumstance.CircumstanceVector[s])
               .setParameter("currentTime", currentTime)
@@ -159,7 +160,7 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       /*double motorNewton = motorOutput*0.7/2.5; //(N) = motor(Nm/s)*mechanical effectiveness/const velocity
       double accel = mass(cabin)*(gravity - motorNewton)* (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);*/
       double motor = motorOutput * (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);
-      double accel = (motor) / mass(cabin) + gravity;
+      double accel = gravity * (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);//(motor) / mass(cabin) + gravity;
       Floor target = cabin.getTarget();
       switch (cabin.getState()) {
         case MOVE:

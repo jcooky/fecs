@@ -1,12 +1,5 @@
 __author__ = 'Byoungwoo'
-
-from fecs import Fecs
-from fecs.model import FloorType
-from fecs.model import Vector
-from java.lang import Math
-from fecs.simulator import Cabin
-from java.util import LinkedList
-from org.slf4j import LoggerFactory
+import __init__
 
 this={
     "currentTime": 0,
@@ -14,14 +7,15 @@ this={
     "state": "NONE",
 }
 q = {}
-logger = LoggerFactory.getLogger("fecs.FloodCircumstance")
+logger = __init__.LoggerFactory.getLogger("fecs.FloodCircumstance")
+FloorType = __init__.FloorType
 
 def setParameter(key,val):
     if key in  this : this[key]=val
 
 def trigger():
-    engine = Fecs.getApplicationContext().getBean("engine")
-    ui = Fecs.getApplicationContext().getBean("userInterface")
+    engine = __init__.Fecs.getApplicationContext().getBean("engine")
+    ui = __init__.Fecs.getApplicationContext().getBean("userInterface")
 
     startTime = this["startTime"]
     currentTime = this["currentTime"]
@@ -42,7 +36,7 @@ def trigger():
     elif this["state"] == "MOVING":
         stopped = True
         for cabin in engine.getCabins().values():
-            if cabin.getState() != Cabin.State.STOP:
+            if cabin.getState() != cabin.State.STOP:
                 stopped = False
         if stopped:
             this["state"] = "STOP"
@@ -53,7 +47,7 @@ def trigger():
                 while len(q[cabinType.toString()]) != 0:
                     cabin.move(q[cabinType.toString()].pop())
             this["state"] = "NONE"
-            engine.setState(engine.getState() & 1)
+            engine.setState(__init__.ICircumstance.STATE_DEFAULT << 1 | (engine.getState() & 1))
             ui.endFail()
 
 

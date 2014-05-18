@@ -36,8 +36,8 @@ public class Controller {
       displayError("already started");
       return;
     }
-    fecs.Fecs.getInterpreter().exec("import DefaultCircumstance");
-    fecs.Fecs.getInterpreter().exec("reload (DefaultCircumstance)");
+//    fecs.Fecs.getInterpreter().exec("import DefaultCircumstance");
+//    fecs.Fecs.getInterpreter().exec("reload (DefaultCircumstance)");
     engine.setState(engine.getState() | Engine.STATE_START);
   }
 
@@ -100,7 +100,7 @@ public class Controller {
       state = ICircumstance.STATE_DEFAULT;
     }
 
-    engine.setState((state << 1) | (engine.getState() & Engine.STATE_START));
+    engine.setState((state << 1) | (engine.getState() & 1));
   }
 
   public void changeGravity(String gravity) {

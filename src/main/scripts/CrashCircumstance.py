@@ -34,6 +34,9 @@ def trigger():
             logger.trace("TRIGGER progress")
             engine.updateCabin(cabin, engine.getGravity(), deltaTime);
 
+
+
+
             if cabin.getPosition() >= engine.getFloors().get(FloorType.UNDER_FIRST).getPosition():
                 cabin.setPosition(engine.getFloors().get(FloorType.UNDER_FIRST).getPosition())
 

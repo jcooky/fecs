@@ -1,7 +1,7 @@
 __author__ = 'Byoungwoo'
-
+import __init__
 from fecs import Fecs
-
+logger = __init__.LoggerFactory.getLogger("fecs.EarthQuakeCircumstance")
 this={
     "startTime": None,
     "currentTime": None,
@@ -13,6 +13,7 @@ def setParameter(key,val):
 
 
 def trigger():
+    logger.debug("CALL trigger")
     engine = Fecs.getApplicationContext().getBean("engine")
     passengerMaker = Fecs.getApplicationContext().getBean("passengerMaker")
     ui = Fecs.getApplicationContext().getBean("userInterface")
@@ -28,8 +29,10 @@ def trigger():
         this["killTime"] += 1000
 
     if currentTime - startTime > 60000:
+        logger.debug("ended")
         ui.endFail()
-        engine.setState(engine.getState() & 1)
+        engine.setState(__init__.ICircumstance.STATE_DEFAULT << 1 | (engine.getState() & 1))
+        __init__.System.out.println(engine.getState())
         for cabin in engine.getCabins().values():
             cabin.enable()
 

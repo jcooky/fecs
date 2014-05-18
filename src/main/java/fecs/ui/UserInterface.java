@@ -152,7 +152,7 @@ public class UserInterface extends JFrame implements Runnable {
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.EARTH_QUAKE);
 
-        startFail(earthQuake);
+        startFail();
       }
     });
     fire.addActionListener(new ActionListener() {
@@ -160,7 +160,7 @@ public class UserInterface extends JFrame implements Runnable {
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.FIRE);
 
-        startFail(fire);
+        startFail();
       }
     });
     flood.addActionListener(new ActionListener() {
@@ -168,7 +168,7 @@ public class UserInterface extends JFrame implements Runnable {
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.FLOOD);
 
-        startFail(flood);
+        startFail();
       }
     });
     crash.addActionListener(new ActionListener() {
@@ -176,12 +176,12 @@ public class UserInterface extends JFrame implements Runnable {
       public void actionPerformed(ActionEvent e) {
         controller.triggerFail(ICircumstance.CRASH);
 
-        startFail(crash);
+        startFail();
       }
     });
   }
 
-  private void startFail(JButton btn) {
+  public void startFail() {
     earthQuake.setEnabled(false);
     fire.setEnabled(false);
     flood.setEnabled(false);
@@ -316,7 +316,7 @@ public class UserInterface extends JFrame implements Runnable {
     final JPanel panel5 = new JPanel();
     panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
     panel4.add(panel5, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-    planetCombo = new JComboBox();
+    planetCombo = new JComboBox(new String[]{"지구","달","화성","금성","직접입력"});
     planetCombo.setLightWeightPopupEnabled(false);
     panel5.add(planetCombo, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     gravity = new JTextField();
