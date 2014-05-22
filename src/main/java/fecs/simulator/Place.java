@@ -1,5 +1,7 @@
 package fecs.simulator;
 
+import fecs.Fecs;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,6 +17,8 @@ public class Place {
     return passengers;
   }
   public void killPassengers() {
+    PassengerMaker pm = (PassengerMaker)Fecs.getApplicationContext().getBean("passengerMaker");
+    pm.setNow(pm.getNow()-this.passengers.size());
     this.passengers.clear();
   }
 

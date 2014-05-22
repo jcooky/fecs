@@ -2,7 +2,6 @@ package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
 import fecs.interfaces.ICircumstance;
-import fecs.interfaces.IEngine;
 import fecs.simulator.Engine;
 import fecs.simulator.PassengerMaker;
 import fecs.ui.Controller;
@@ -55,7 +54,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
     controller.startSimulation();
 
     // then
-    verify(engine).setState(IEngine.STATE_START);
+    verify(engine).setEngineState(Engine.STATE_START);
   }
 
   @Test
@@ -65,7 +64,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
     controller.stopSimulation();
 
     // then
-    verify(engine).setState(IEngine.STATE_STOP);
+    verify(engine).setEngineState(Engine.STATE_STOP);
   }
 
   @Test
@@ -74,11 +73,14 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
     when(engine.getState()).thenReturn((ICircumstance.STATE_CRASH << 1) | Engine.STATE_START);
     controller.stopSimulation();
 
-    verify(engine).setState((ICircumstance.STATE_CRASH << 1));
+    verify(engine).setEngineState((ICircumstance.STATE_CRASH << 1));
   }
 
   @Test
   public void testTriggerFail() throws Exception {
+    when(engine.getState()).thenReturn((ICircumstance.STATE_CRASH<<1)|Engine.STATE_START);
+//    controller.startSimulation();
+//    verify(engine)
   }
 
   @Test
@@ -120,9 +122,9 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testChangeCabinLimitPeople() throws Exception {
     // when
-    when(engine.getCabinWeight()).thenReturn(0.0);
+    when(engine.getCabinMass()).thenReturn(0.0);
     when(engine.getCabinLimitWeight()).thenReturn(0.0);
-    when(engine.getPassengerWeight()).thenReturn(0.0);
+    when(engine.getPassengerMass()).thenReturn(0.0);
     controller.changeCabinLimitPeople("10");
 
     // then
@@ -132,9 +134,9 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testChangeCabinLimitPeopleWithOverLimit() throws Exception {
     // when
-    when(engine.getCabinWeight()).thenReturn(0.0);
+    when(engine.getCabinMass()).thenReturn(0.0);
     when(engine.getCabinLimitWeight()).thenReturn(4.0);
-    when(engine.getPassengerWeight()).thenReturn(1.0);
+    when(engine.getPassengerMass()).thenReturn(1.0);
     when(ui.getCabinLimitPeople()).thenReturn(mock(JTextField.class));
     controller.changeCabinLimitPeople("5");
 
@@ -149,7 +151,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
     controller.changeCabinWeight("10.0");
 
     // then
-    verify(engine).setCabinWeight(10.0);
+    verify(engine).setCabinMass(10.0);
   }
 
   @Test
@@ -158,7 +160,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
     controller.changePassengerWeight("30.0");
 
     // then
-    verify(engine).setPassengerWeight(30.0);
+    verify(engine).setPassengerMass(30.0);
   }
 
   @Test
@@ -210,7 +212,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testChangeMoreEnterProbability() throws Exception {
     // when
-    controller.changeMoreEnterProbability("0.22");
+    controller.changeMoreEnterProbability("22");
 
     // then
     verify(engine).setMoreEnterProbability(0.22);
@@ -237,9 +239,9 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testChangeCabinLimitWeight() throws Exception {
     // when
-    when(engine.getCabinWeight()).thenReturn(0.0);
+    when(engine.getCabinMass()).thenReturn(0.0);
     when(engine.getCabinLimitWeight()).thenReturn(0.0);
-    when(engine.getPassengerWeight()).thenReturn(0.0);
+    when(engine.getPassengerMass()).thenReturn(0.0);
     controller.changeCabinLimitWeight("4.0");
 
     // then
@@ -249,9 +251,9 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testChangeCabinLimitWeightWithOver() throws Exception {
     // when
-    when(engine.getCabinWeight()).thenReturn(5.0);
+    when(engine.getCabinMass()).thenReturn(5.0);
     when(engine.getCabinLimitWeight()).thenReturn(0.0);
-    when(engine.getPassengerWeight()).thenReturn(0.0);
+    when(engine.getPassengerMass()).thenReturn(0.0);
     when(ui.getCabinLimitWeight()).thenReturn(mock(JTextField.class));
     controller.changeCabinLimitWeight("1.0");
 

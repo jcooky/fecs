@@ -1,8 +1,8 @@
 package fecs;
 
 import fecs.interfaces.ICircumstance;
-import fecs.interfaces.IEngine;
 import fecs.interfaces.IPassengerMaker;
+import fecs.simulator.Engine;
 import fecs.ui.UserInterface;
 import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class Fecs implements CommandLineRunner{
   private UserInterface userInterface;
 
   @Autowired
-  private IEngine engine;
+  private Engine engine;
 
   @Autowired
   private IPassengerMaker passengerMaker;

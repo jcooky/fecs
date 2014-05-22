@@ -38,7 +38,7 @@ public class Controller {
     }
 //    fecs.Fecs.getInterpreter().exec("import DefaultCircumstance");
 //    fecs.Fecs.getInterpreter().exec("reload (DefaultCircumstance)");
-    engine.setState(engine.getState() | Engine.STATE_START);
+    engine.setEngineState(Engine.STATE_START);
   }
 
   public void stopSimulation() {
@@ -48,7 +48,7 @@ public class Controller {
       displayError("already stopped");
       return;
     }
-    engine.setState(engine.getState() & (~Engine.STATE_START));
+    engine.setEngineState(Engine.STATE_STOP);
   }
 
   public void triggerFail(String name) {
@@ -57,20 +57,19 @@ public class Controller {
     if (ICircumstance.FIRE.equals(name)) {
       ICircumstance c = Circumstance.get(ICircumstance.FIRE).setParameter("validate",false);
       String answer = JOptionPane.showInputDialog("which floor? (RANDOM,-1,2~10)");
-      if(!answer.equals("RANDOM")) {
-        Integer val;
-        try {
-          val = Integer.parseInt(answer);
-          if (!(val == -1 || (val >= 2 && val <= 10))) {
-            displayError("not in a valid range");
-            return;
-          }
-        } catch (NumberFormatException e) {
-          displayError("not a number");
-          return;
-        }
-        Floor fireFloor = engine.getFloors().get(FloorType.valueOf(answer));
+
+      Integer val;
+      if(answer.equals("RANDOM")) {
+        val = (int)(Math.random() * 10);
+        if(val==0) val--;
+      }else{
+        try { val = Integer.parseInt(answer); }
+        catch (NumberFormatException e) { displayError("not a number"); return; }
+        if (!(val == -1 || (val >= 2 && val <= 10))) { displayError("not in a valid range"); return; }
       }
+      Floor fireFloor = engine.getFloors().get(FloorType.valueOf(val));
+      c.setParameter("floor", fireFloor);
+
       c.trigger();
 
       state = ICircumstance.STATE_FIRE;
@@ -100,7 +99,7 @@ public class Controller {
       state = ICircumstance.STATE_DEFAULT;
     }
 
-    engine.setState((state << 1) | (engine.getState() & 1));
+    engine.setCircumstanceState(state);
   }
 
   public void changeGravity(String gravity) {
@@ -109,8 +108,7 @@ public class Controller {
       Double val = Double.parseDouble(gravity);
 
       if (val > 50) val = 50.0;
-      else if (val < 0) val = 0.0;
-      else val = Engine.earthGravity;
+      else if (val < 1) val = 1.0;
 
       engine.setGravity(val);
       ui.getGravity().setText(String.valueOf(val));
@@ -127,8 +125,8 @@ public class Controller {
 
       if (val > 0) {
         Double cabinLimitWeight = engine.getCabinLimitWeight();
-        Double cabinWeight = engine.getCabinWeight();
-        Double passengerWeight = engine.getPassengerWeight();
+        Double cabinWeight = engine.getCabinMass();
+        Double passengerWeight = engine.getPassengerMass();
 
         if (cabinWeight + val * passengerWeight > cabinLimitWeight) {
           val = (int) (Math.floor((cabinLimitWeight - cabinWeight) / passengerWeight));
@@ -149,13 +147,13 @@ public class Controller {
       Double val = Double.parseDouble(weight);
 
       if (val > 0) {
-        engine.setCabinWeight(val);
+        engine.setCabinMass(val);
       } else {
         throw new NumberFormatException();
       }
     } catch (NumberFormatException e) {
       displayError(e.getMessage());
-      ui.getCabinWeight().setText(engine.getCabinWeight().toString());
+      ui.getCabinMass().setText(engine.getCabinMass().toString());
     }
   }
 
@@ -163,12 +161,12 @@ public class Controller {
     try {
       Double val = Double.parseDouble(weight);
       if (val > 0)
-        engine.setPassengerWeight(val);
+        engine.setPassengerMass(val);
       else
         throw new NumberFormatException();
     } catch (NumberFormatException e) {
       displayError(e.getMessage());
-      ui.getPassengerWeight().setText(engine.getPassengerWeight().toString());
+      ui.getPassengerMass().setText(engine.getPassengerMass().toString());
     }
   }
 
@@ -214,9 +212,9 @@ public class Controller {
 
   public void changeMoreEnterProbability(String moreEnterProbability) {
     try {
-      Double val = Double.parseDouble(moreEnterProbability);
+      Double val = Double.parseDouble(moreEnterProbability)/100;
 
-      if (val > 0 && val < 1) {
+      if (val >= 0 && val <= 1) {
         engine.setMoreEnterProbability(val);
       } else {
         throw new NumberFormatException();
@@ -267,8 +265,8 @@ public class Controller {
       Double val = Double.parseDouble(cabinLimitWeight);
 
       if (val > 0) {
-        Double passengerWeight = engine.getPassengerWeight();
-        Double cabinWeight = engine.getCabinWeight();
+        Double passengerWeight = engine.getPassengerMass();
+        Double cabinWeight = engine.getCabinMass();
         Integer cabinLimitPeople = engine.getCabinLimitPeople();
 
         if (val < cabinLimitPeople * passengerWeight + cabinWeight) {

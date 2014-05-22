@@ -23,12 +23,12 @@ public class UserInterface extends JFrame implements Runnable {
   private JPanel rootPanel;
   private JTextField howMany;
   private JTextField forceBreak;
-  private JTextField cabinWeight;
+  private JTextField cabinMass;
   private JTextField totalNumPassengers;
   private JTextField gravity;
   private JTextField motorOutput;
   private JTextField moreEnterProbability;
-  private JTextField passengerWeight;
+  private JTextField passengerMass;
   private JTextField cabinLimitPeople;
   private JTextField cabinLimitWeight;
   private JPanel drawTarget;
@@ -87,10 +87,10 @@ public class UserInterface extends JFrame implements Runnable {
         controller.changeForceBreak(forceBreak.getText());
       }
     });
-    cabinWeight.addActionListener(new ActionListener() {
+    cabinMass.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.changeCabinWeight(cabinWeight.getText());
+        controller.changeCabinWeight(cabinMass.getText());
       }
     });
     totalNumPassengers.addActionListener(new ActionListener() {
@@ -117,10 +117,10 @@ public class UserInterface extends JFrame implements Runnable {
         controller.changeMoreEnterProbability(moreEnterProbability.getText());
       }
     });
-    passengerWeight.addActionListener(new ActionListener() {
+    passengerMass.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.changePassengerWeight(passengerWeight.getText());
+        controller.changePassengerWeight(passengerMass.getText());
       }
     });
     cabinLimitWeight.addActionListener(new ActionListener() {
@@ -135,15 +135,24 @@ public class UserInterface extends JFrame implements Runnable {
         controller.changeCabinLimitPeople(cabinLimitPeople.getText());
       }
     });
+    if (planetCombo.getItemCount() == 0) {
+      planetCombo.addItem("지구");
+      planetCombo.addItem("달");
+      planetCombo.addItem("화성");
+      planetCombo.addItem("금성");
+      planetCombo.addItem("직접입력");
+    }
     planetCombo.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (planetCombo.getSelectedItem().toString().equals("직접입력")) {
+        String selected = planetCombo.getSelectedItem().toString();
+        if (selected.equals("직접입력")) {
           gravity.setEnabled(true);
           gravity.requestFocus();
         } else {
           gravity.setEnabled(false);
-          gravity.setText(Engine.gravityTable[planetCombo.getSelectedIndex()].toString());
+          gravity.setText(Engine.gravityTable.get(selected).toString());
+          gravity.getActionListeners()[0].actionPerformed(null);
         }
       }
     });
@@ -207,8 +216,8 @@ public class UserInterface extends JFrame implements Runnable {
     return forceBreak;
   }
 
-  public JTextField getCabinWeight() {
-    return cabinWeight;
+  public JTextField getCabinMass() {
+    return cabinMass;
   }
 
   public JTextField getTotalNumPassengers() {
@@ -227,8 +236,8 @@ public class UserInterface extends JFrame implements Runnable {
     return moreEnterProbability;
   }
 
-  public JTextField getPassengerWeight() {
-    return passengerWeight;
+  public JTextField getPassengerMass() {
+    return passengerMass;
   }
 
   public JTextField getCabinLimitPeople() {
@@ -299,11 +308,11 @@ public class UserInterface extends JFrame implements Runnable {
     forceBreak.setText("10000");
     panel4.add(forceBreak, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JLabel label3 = new JLabel();
-    label3.setText("캐빈 무게(kg)");
+    label3.setText("캐빈 질량(kg)");
     panel4.add(label3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-    cabinWeight = new JTextField();
-    cabinWeight.setText("700");
-    panel4.add(cabinWeight, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    cabinMass = new JTextField();
+    cabinMass.setText("700");
+    panel4.add(cabinMass, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JLabel label4 = new JLabel();
     label4.setText("전체 승객 수(명)");
     panel4.add(label4, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -311,12 +320,12 @@ public class UserInterface extends JFrame implements Runnable {
     totalNumPassengers.setText("30");
     panel4.add(totalNumPassengers, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JLabel label5 = new JLabel();
-    label5.setText("중력 설정(m/s²)");
+    label5.setText("중력(m/s²)");
     panel4.add(label5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JPanel panel5 = new JPanel();
     panel5.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
     panel4.add(panel5, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-    planetCombo = new JComboBox(new String[]{"지구","달","화성","금성","직접입력"});
+    planetCombo = new JComboBox();
     planetCombo.setLightWeightPopupEnabled(false);
     panel5.add(planetCombo, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     gravity = new JTextField();
@@ -333,22 +342,22 @@ public class UserInterface extends JFrame implements Runnable {
     label7.setText("정원초과시 더 탈 확률(%)");
     panel4.add(label7, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     moreEnterProbability = new JTextField();
-    moreEnterProbability.setText("0.22");
+    moreEnterProbability.setText("22");
     panel4.add(moreEnterProbability, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JLabel label8 = new JLabel();
-    label8.setText("승객 무게(kg)");
+    label8.setText("승객 질량(kg)");
     panel4.add(label8, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-    passengerWeight = new JTextField();
-    passengerWeight.setText("80");
-    panel4.add(passengerWeight, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+    passengerMass = new JTextField();
+    passengerMass.setText("80");
+    panel4.add(passengerMass, new GridConstraints(3, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JLabel label9 = new JLabel();
-    label9.setText("캐빈 정원 설정(명)");
+    label9.setText("캐빈 정원(명)");
     panel4.add(label9, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     cabinLimitPeople = new JTextField();
     cabinLimitPeople.setText("12");
     panel4.add(cabinLimitPeople, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     final JLabel label10 = new JLabel();
-    label10.setText("캐빈 한계 무게 설정(kg)");
+    label10.setText("캐빈 한계 질량(kg)");
     panel4.add(label10, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     cabinLimitWeight = new JTextField();
     cabinLimitWeight.setText("1660");

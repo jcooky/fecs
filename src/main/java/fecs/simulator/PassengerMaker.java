@@ -61,6 +61,7 @@ public class PassengerMaker implements IPassengerMaker {
       }
 
       this.passengers.remove(i);
+      now--;
     }
   }
 

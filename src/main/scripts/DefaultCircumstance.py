@@ -9,6 +9,7 @@ this={
   "makeWait": MAKE_WAIT_SEC,
   "deltaTime": None,
   "validate": False,
+  "noPassengerMode" : False,
   "doorWait":doorWait
 }
 
@@ -17,8 +18,8 @@ def setParameter(key,val):
 
 def trigger():
   #global variables
-  global passengerMaker, engine, crashCircumstance
-
+  global passengerMaker, crashCircumstance#, engine
+  engine = __init__.Fecs.getApplicationContext().getBean("engine")
   #local variables
   out = __init__.System.out
   cabinsController = __init__.CabinsController
@@ -26,7 +27,7 @@ def trigger():
   CabinType = __init__.CabinType
   #local function
   def cabinGo(cabin):
-    out.println("cabin goes")
+    # out.println("cabin goes")
     que=cabin.getQueue()
     # out.println(cabin.getPassengers())
     for p in  cabin.getPassengers():
@@ -42,39 +43,48 @@ def trigger():
     for p in passengers.toArray():
       passengers.remove(p)
       cabin.getPassengers().add(p)
+      p.setState(p.State.RIDING)
 
-  this["makeWait"] -= this["deltaTime"]
-  # out.println("default trigger started with " + str(this["makeWait"]))
-  if this["makeWait"] < 0 :
-    passengerMaker.makePassenger()
-    this["makeWait"]=MAKE_WAIT_SEC
+  # out.println("default trigger started")
+  if not this["noPassengerMode"]:
+    this["makeWait"] -= this["deltaTime"]
+    if this["makeWait"] < 0 :
+      passengerMaker.makePassenger()
+      this["makeWait"]=MAKE_WAIT_SEC
 
   cabins = engine.getCabins()
   floors = engine.getFloors()
 
+  # clear non-waiting passengers in all floor
+  for floor in floors.values():
+    for passenger in floor.getPassengers().toArray():
+      if passenger.getState() == passenger.State.NO_WAIT :
+        floor.getPassengers().remove(passenger)
+        passengerMaker.setNow(passengerMaker.getNow()-1)
+
   for cabin in cabins.values() :
     if not cabin.isOn(): cabin.enable()
-    if cabin.getTarget() is None: continue
+    # if cabin.getTarget() is None: continue
+    # out.println("updating cabin"+str(cabin)+" by "+str(this["deltaTime"]))
+    engine.updateCabin(cabin,this["deltaTime"])
     floor = cabin.getTarget()
-    # out.println(floor.getPosition())
-    # out.println(cabin.getPosition())
-    if abs(floor.getPosition()-cabin.getPosition())<4:
+    # out.println(cabins)
+    if cabin.getState()==cabin.State.STOP and floor is not None:
+    # if abs(floor.getPosition()-cabin.getPosition())<4: #arriving threshold is +4 ~ -4
       # if cabin.getTaget() is not None:
       #     out.println(cabin.getTarget())
       #     if cabin.getTarget()==floor:
-      # out.println("cabin("+str(cabin)+") arrived on floor("+str(floor.getNum())+")")
+      out.println("cabin("+str(cabin)+") arrived on floor("+str(floor.getNum())+")")
       for p in cabin.getPassengers().toArray():
         if p.getDest()==floor.getNum() :
           # out.println(str(p)+'wants to take off')
+          p.setState(p.State.NO_WAIT)
           cabin.getPassengers().remove(p)
-          passengerMaker.setNow(passengerMaker.getNow()-1)
-    # engine.updateCabin(cabin,this["deltaTime"])
-
-
-
+          floor.getPassengers().add(p)
+      if cabin.getQueue().size()>0 : cabin.move() #to next queued floor
   firstFloor = floors.get(FloorType.FIRST)
   firstFloorPassengers = firstFloor.getPassengers()
-
+  # out.println(firstFloorPassengers)
   if firstFloorPassengers.size()>0 :
     arrivedCabin=None
     arrivedCabinNo=0
@@ -98,7 +108,7 @@ def trigger():
           out.println("death dice")
           TakeIn(arrivedCabin,firstFloorPassengers)
           crashCircumstance.setParameter('cabin',arrivedCabin)
-          engine.setState(__init__.ICircumstance.STATE_CRASH << 1 | (engine.getState() & 1))
+          engine.setCircumstanceState(__init__.ICircumstance.STATE_CRASH)
           ui=__init__.Fecs.getApplicationContext().getBean("userInterface")
           ui.startFail()
 
@@ -122,19 +132,6 @@ def trigger():
       # out.println("cabin not arrived. ordered to come")
       left = cabins.get(CabinType.LEFT)
       right = cabins.get(CabinType.RIGHT)
+      # engine.getPushedFloorSet().add(firstFloor)
+      # out.println(engine.getPushedFloorSet())
       cabinsController.control(left,right,firstFloor)
-
-  # for i, cabin in enumerate(cabins):
-  #     if not cabin.getQueue().isEmpty(): return
-  # if this["cabinWait"][i]<=0 :
-  #     cabin.enable()
-  #     this["cabinWait"][i]=1000
-  # else :
-  #     cabin.disable()
-  #     this["cabinWait"][i]-=1
-  # return
-  #     __builtins__['cabin wait'+__iter__]
-  #     cabin.set
-  #     return
-  # return
-  #if(engine.cabins.get(CabinType.LEFT))

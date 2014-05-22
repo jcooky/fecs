@@ -3,7 +3,6 @@ package fecs.simulator;
 import fecs.Circumstance;
 import fecs.Fecs;
 import fecs.interfaces.ICircumstance;
-import fecs.interfaces.IEngine;
 import fecs.model.CabinType;
 import fecs.model.FloorType;
 import fecs.model.Vector;
@@ -17,15 +16,17 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by jcooky on 2014. 5. 12..
  */
 @Component("engine")
-public class Engine implements IEngine, Runnable, InitializingBean {
+public class Engine implements Runnable, InitializingBean {
+  static public final int STATE_STOP = 0b00,
+      STATE_START = 0b01;
+  static public final double CABIN_MOVE_THRESHOLD=10*0.01; //10cm in m
+  static public final double RealToPixelRatio = Floor.PIXEL_HEIGHT / Floor.REAL_HEIGHT;
   private static final double TARGET_WIDTH = 300;
   private static final double TARGET_HEIGHT = 550;
 
@@ -43,20 +44,26 @@ public class Engine implements IEngine, Runnable, InitializingBean {
 
   /* gravity related constants */
   public static final Double earthGravity = 9.80665d;
-  public static final Double[] gravityTable = new Double[]{earthGravity, 1.622d, 3.711d, 8.87d}; // 지구, 달, 화성, 금성
+//  public static final Double[] gravityTable = new Double[]{earthGravity, 1.622d, 3.711d, 8.87d}; // 지구, 달, 화성, 금성
+  public static final Map<String,Double> gravityTable=new HashMap<String,Double>(){{
+    this.put("지구",earthGravity);
+    this.put("달",1.622d);
+    this.put("화성",3.711d);
+    this.put("금성",8.87d);
+  }};
 
   private Double gravity = earthGravity;
   private Map<CabinType, Cabin> cabins = new EnumMap<>(CabinType.class);
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
-  private Double cabinWeight = 700d;
+  private Double cabinMass = 700d;
   private Integer state = (ICircumstance.STATE_DEFAULT <<1);
   private Double forceBreak = 10000d;
   private Double motorOutput = 27000d;
   private Integer cabinLimitPeople = 12;
-  private Double cabinLimitWeight = 1660d; // = cabinLimitPeople*passengerWeight+cabinWeight;
+  private Double cabinLimitWeight = 1660d; // = cabinLimitPeople*passengerMass+cabinMass;
   private Double moreEnterProbability = 0.22;
-  private Double passengerWeight = 80d;
-
+  private Double passengerMass = 80d;
+  private Set<Floor> pushedFloorSet = new HashSet<>(FloorType.values().length);
   @Override
   public void run() {
 
@@ -67,10 +74,9 @@ public class Engine implements IEngine, Runnable, InitializingBean {
       Long currentTime = System.currentTimeMillis();
       double deltaTime = (currentTime - lastUpdateTime) * 0.001;
 
-        int s = state & 1; //get last bit
-        if (s == Engine.STATE_START) { //last bit is 1 = started
-          s = ((state & ~1) >> 1) - 1; //get the others bit, subtract to match index
-          if (s >= Circumstance.CircumstanceVector.length) throw new Exception("unstable state value");
+        if (getEngineState() == STATE_START) { //last bit is 1 = started
+          int s = getCircumstanceState()-1; //0 is null state(error)
+          if (s >= Circumstance.CircumstanceVector.length || s <0) throw new Exception("unstable state value with "+ String.valueOf(s));
           Circumstance.get(Circumstance.CircumstanceVector[s])
               .setParameter("currentTime", currentTime)
               .setParameter("deltaTime", deltaTime)
@@ -100,16 +106,17 @@ public class Engine implements IEngine, Runnable, InitializingBean {
   }
 
   private void draw() {
-      Renderer renderer = ui.getRenderer();
-      Graphics g = renderer.getGraphics();
-      JPanel target = ui.getDrawTarget();
+    Renderer renderer = ui.getRenderer();
+    Graphics g = renderer.getGraphics();
+    int fsize = g.getFont().getSize();
+    JPanel target = ui.getDrawTarget();
 
       g.setColor(Color.GRAY);
       g.fillRect(0, 0, target.getWidth(), target.getHeight());
 
       Map<CabinType, Integer> xmap = new HashMap<CabinType, Integer>() {{
-        this.put(CabinType.LEFT, Floor.WIDTH + 10);
-        this.put(CabinType.RIGHT, Floor.WIDTH + 10 + Cabin.WIDTH + 30);
+        this.put(CabinType.LEFT, Floor.PIXEL_WIDTH + 10);
+        this.put(CabinType.RIGHT, Floor.PIXEL_WIDTH + 10 + Cabin.PIXEL_WIDTH + 30);
       }};
 
       for (CabinType type : cabins.keySet()) {
@@ -117,75 +124,113 @@ public class Engine implements IEngine, Runnable, InitializingBean {
         Cabin cabin = cabins.get(type);
 
         Integer passengers = new Integer(cabin.getPassengers().size());
+        double cabinY=cabin.getPosition()*RealToPixelRatio,
+          cabinH=(double)cabin.PIXEL_HEIGHT,
+          cabinW=(double)cabin.PIXEL_WIDTH;
 
         g.setColor(Color.WHITE);
-        g.fillRect(x, (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
+        g.fillRect(x, (int) cabinY, (int)cabinW, (int)cabinH);
         g.setColor(Color.BLACK);
-        g.drawRect(x, (int) cabin.getPosition(), Cabin.WIDTH, Cabin.HEIGHT);
-        g.drawString(passengers.toString(), (int) ((double) x + ((double) (Cabin.WIDTH) / 2.0) - ((double) (g.getFont().getSize()) / 2.0)),
-            (int) (cabin.getPosition() + ((double) (Cabin.HEIGHT) / 2.0)));
+        g.drawRect(x, (int) cabinY, (int)cabinW, (int)cabinH);
+        //cabin fullness
+        g.drawString(passengers>=cabinLimitPeople?passengers>cabinLimitPeople?"초과":"만원":"", (int) (x + (cabinW / 2) - fsize), (int) (cabinY + (cabinH / 2.0) - fsize));
+        //passengers on cabin
+        g.drawString(String.format("%d명",passengers), (int) (x + (cabinW / 2) - (fsize * 2 / 2)), (int) (cabinY + (cabinH / 2.0)));
+        //cabin weight
+        g.drawString(String.format("%.0fkg",mass(cabin)), x, (int) (cabinY + (cabinH / 2.0) + fsize));
+        //cabin speed
+        g.drawString(String.format("%.1fm/s",Math.abs(cabin.getVelocity())), x, (int) (cabinY + (cabinH / 2.0) + (fsize * 2)));
       }
 
       for (Floor floor : floors.values()) {
         Integer passengers = new Integer(floor.getPassengers().size());
-
+        double floorY = floor.getPosition()*RealToPixelRatio;
         g.setFont(Font.getFont(Font.SANS_SERIF));
         g.setColor(Color.WHITE);
-        g.fillRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
+        g.fillRect(1, (int) floorY, Floor.PIXEL_WIDTH, Floor.PIXEL_HEIGHT);
         g.setColor(Color.BLACK);
-        g.drawRect(1, (int) floor.getPosition(), Floor.WIDTH, Floor.HEIGHT);
-        g.drawString(floor.getNum() + "층", 1, (int) floor.getPosition() + 15);
-        g.drawString(passengers.toString(), (int) (1.0 + ((double) (Floor.WIDTH) / 2.0) - ((double) (g.getFont().getSize()) / 2.0)),
-            (int) (floor.getPosition() + ((double) (Floor.HEIGHT) / 2.0)));
+        g.drawRect(1, (int) floorY, Floor.PIXEL_WIDTH, Floor.PIXEL_HEIGHT);
+        g.drawString(floor.getNum() + "층", 1, (int) floorY + 15);
+        g.drawString(passengers.toString(), (int) (1 + ((double) (Floor.PIXEL_WIDTH) / 2) - ((double) fsize / 2)),
+            (int) (floorY + ((double) (Floor.PIXEL_HEIGHT) / 2.0)));
       }
-
+      if((state>>1) == ICircumstance.STATE_FIRE) {
+        Floor firedFloor = (Floor)Circumstance.get(ICircumstance.FIRE).getParameter("floor");
+        if(null!=firedFloor)
+          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * RealToPixelRatio +((double) (Floor.PIXEL_HEIGHT)/2 + fsize * 2)));
+      }
       renderer.flush();
   }
 
   public void updateCabin(Cabin cabin, double accel, double deltaTime) {
-    double v1 = accel * deltaTime;
-    cabin.setPosition(cabin.getPosition() + (cabin.getVelocity() * deltaTime + 0.5 * (v1 * deltaTime)) * 16.6667);
-    cabin.setVelocity(cabin.getVelocity() + v1);
+    //accel = const
+    //vf=vi+ a*dt
+    //sf=si+integral(dv=vf-vi)=si+dt*(vf-vi)=si+dt*(a*dt)=si+a*dt^2
+    if(deltaTime>0.2)return;
+    double vi=cabin.getVelocity(),
+      vf=vi+accel*deltaTime;
+//    if(vf>50) vf = 0d;
+    double ds=0.5*deltaTime*(vf+vi);
+    cabin.setPosition(cabin.getPosition() + ds);//(cabin.getVelocity() * deltaTime + 0.5 * (v1 * deltaTime)) * 16.6667);
+    cabin.setVelocity(vf);
 
     double min = floors.get(FloorType.TENTH).getPosition(),
         max = floors.get(FloorType.UNDER_FIRST).getPosition();
-    if(cabin.getPosition()>max) cabin.setPosition(max);
-    if(cabin.getPosition()<min) cabin.setPosition(min);
+    if(cabin.getPosition()>max){ cabin.setPosition(max);}
+    if(cabin.getPosition()<min){ cabin.setPosition(min);}
   }
 
-  private void updateCabin(Cabin cabin, double deltaTime) {
+  public void updateCabin(Cabin cabin, double deltaTime) {
+    if(deltaTime>0.2)return;
     if (cabin.isOn()) {
-      Vector vector = cabin.getVector();
-      //up carrying accel = gravity - motor = down carrying accel (by common elevator desgin)
-      /*double motorNewton = motorOutput*0.7/2.5; //(N) = motor(Nm/s)*mechanical effectiveness/const velocity
-      double accel = mass(cabin)*(gravity - motorNewton)* (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);*/
-      double motor = motorOutput * (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);
-      double accel = gravity * (vector == null ? 0 : vector == Vector.DOWN ? 1.0 : -1.0);//(motor) / mass(cabin) + gravity;
-      Floor target = cabin.getTarget();
       switch (cabin.getState()) {
         case MOVE:
+          double vector = cabin.getVector();
+          double vectorUnit = vector/Math.abs(vector);
+          double motor = motorOutput*earthGravity*deltaTime; // Nm/s (weight) -> kgfm
+          if(motor<=gravity){
+            logger.debug("motor is too weak or gravity is too strong.");
+            motor=gravity;
+          }
+          Floor target = cabin.getTarget();
+          double leftVector =target.getPosition()-cabin.getPosition();
+          double accel = motor/mass(cabin) * (leftVector/Math.abs(leftVector));
+          if(cabin.getVelocity()>1)
+            accel *= ((Math.abs(vector*0.5) < Math.abs(leftVector)) ? 1 : -1) ; //brake on half point
+          logger.debug(String.format("%f -> %f (%f) : %f",cabin.getPosition(), target.getPosition(),vector,accel));
           updateCabin(cabin, accel, deltaTime);
-          if ((vector == Vector.DOWN && cabin.getPosition() > target.getPosition())
-              || (vector == Vector.UP && cabin.getPosition() < target.getPosition())) {
+
+          if (((vectorUnit == Vector.DOWN.value() && 0 >= leftVector)
+              || (vectorUnit == Vector.UP.value() && 0 <= leftVector))
+            &&(Math.abs(leftVector)<CABIN_MOVE_THRESHOLD)) { //arrive
             cabin.setPosition(target.getPosition());
             cabin.stop();
-
-            if (!cabin.getQueue().isEmpty()) {
-              cabin.move();
-            }
-          }else if(cabin.getPosition()==target.getPosition()) cabin.stop();
-
+            cabin.getQueue().remove(target);
+          }
           break;
         case STOP:
-          cabin.stop();
+//          if (!cabin.getQueue().isEmpty() || !pushedFloorSet.isEmpty()) {
+//            Set<Floor> otherCabinQueue = (cabins.get(CabinType.LEFT)==cabin?cabins.get(CabinType.RIGHT):cabins.get(CabinType.LEFT)).getQueue(),
+//              thisCabinQueue=cabin.getQueue();
+//            for (Floor f : pushedFloorSet)
+//              if(!thisCabinQueue.contains(f) &&!otherCabinQueue.contains(f))
+//                ((thisCabinQueue.size()<=otherCabinQueue.size())?thisCabinQueue:otherCabinQueue).add(f);
+//            //add passenger awaiting floor into cabin queue
+//            cabin.move();
+//          }else
+
+            cabin.move();
           break;
       }
     }
   }
 
   private void initCabins() {
-    cabins.put(CabinType.LEFT, new Cabin());
-    cabins.put(CabinType.RIGHT, new Cabin());
+    for(CabinType t : CabinType.values()){
+      Cabin cabin = new Cabin();
+      cabin.setPosition(floors.get(FloorType.TENTH).getPosition());
+      cabins.put(t, cabin);
+    }
   }
 
   private void initFloors() throws Exception {
@@ -199,13 +244,13 @@ public class Engine implements IEngine, Runnable, InitializingBean {
 
         floors.put(FloorType.valueOf(i), floor);
 
-        y += Floor.HEIGHT;
+        y += Floor.REAL_HEIGHT;
       }
     }
   }
 
   public Double mass(Cabin cabin) {
-    return ((cabinWeight / earthGravity) + ((passengerWeight / earthGravity) * cabin.getPassengers().size()));
+    return (cabinMass + (passengerMass * cabin.getPassengers().size()));
   }
 
   public Double getGravity() {
@@ -216,26 +261,35 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     this.gravity = gravity;
   }
 
-  public Double getCabinWeight() {
-    return cabinWeight;
+  public Double getCabinMass() {
+    return cabinMass;
   }
 
-  public void setCabinWeight(Double cabinWeight) {
-    this.cabinWeight = cabinWeight;
+  public void setCabinMass(Double cabinMass) {
+    this.cabinMass = cabinMass;
+  }
+  public void setState(Integer state){
+    this.state=state;
+  }
+  public void setEngineState(Integer state) {
+    this.state = (getCircumstanceState() << 1) | getEngineState(state);
+  }
+
+  public void setCircumstanceState(Integer state){
+    this.state = (state<<1) | getEngineState();
   }
 
   public Integer getState() {
     return state;
   }
 
-  public void setState(Integer state) {
-    Integer st = state & 1;
-    Integer highState = state | ~1;
-    if(highState==0) this.state = (this.state | ~1) | st;
-    else this.state = state;
-//    if ((state | 1) == 1 || (state |)==0) this.state &= state;
-//    this.state = state;
-  }
+  public Integer getEngineState(Integer s){return s & 1;}
+
+  public Integer getEngineState(){ return getEngineState(state);}
+
+  public Integer getCircumstanceState(Integer s){return (s & ~1) >>1;}
+
+  public Integer getCircumstanceState(){return getCircumstanceState(state);}
 
   public Double getForceBreak() {
     return forceBreak;
@@ -277,12 +331,12 @@ public class Engine implements IEngine, Runnable, InitializingBean {
     this.moreEnterProbability = moreEnterProbability;
   }
 
-  public Double getPassengerWeight() {
-    return passengerWeight;
+  public Double getPassengerMass() {
+    return passengerMass;
   }
 
-  public void setPassengerWeight(Double passengerWeight) {
-    this.passengerWeight = passengerWeight;
+  public void setPassengerMass(Double passengerMass) {
+    this.passengerMass = passengerMass;
   }
 
 
@@ -317,5 +371,9 @@ public class Engine implements IEngine, Runnable, InitializingBean {
 
   public Map<CabinType, Cabin> getCabins() {
     return cabins;
+  }
+
+  public Set<Floor> getPushedFloorSet() {
+    return pushedFloorSet;
   }
 }

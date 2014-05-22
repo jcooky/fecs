@@ -47,7 +47,7 @@ def trigger():
                 while len(q[cabinType.toString()]) != 0:
                     cabin.move(q[cabinType.toString()].pop())
             this["state"] = "NONE"
-            engine.setState(__init__.ICircumstance.STATE_DEFAULT << 1 | (engine.getState() & 1))
+            engine.setCircumstanceState(__init__.ICircumstance.STATE_DEFAULT)
             ui.endFail()
 
 

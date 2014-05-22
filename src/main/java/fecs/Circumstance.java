@@ -40,6 +40,12 @@ public abstract class Circumstance implements ICircumstance {
     return this;
   }
 
+  public Object getParameter(String key) {
+    PyObject m = pyCircumstance.__getattr__("getParameter");
+    if(m==null) return null;
+    return m.__call__(new PyString(key)).__tojava__(Object.class);
+  }
+
   public static Circumstance get(String name) {
     return strategies.get(name);
   }

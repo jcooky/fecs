@@ -88,7 +88,7 @@ public class CabinsController {
       // 한 쪽 만 멈춰 있는 경우
       Cabin stoppedCabin = Cabin.State.STOP.equals(left.getState()) ? left : right,
         movingCabin = stoppedCabin.equals(right) ? left : right;
-      if(movingCabin.getTarget().equals(floor)) return;
+      if(movingCabin.getTarget()==null || movingCabin.getTarget().equals(floor)) return;
       else cabin = stoppedCabin;
     }
     cabin.move(floor);

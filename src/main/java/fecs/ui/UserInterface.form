@@ -122,10 +122,10 @@
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="캐빈 무게(kg)"/>
+                  <text value="캐빈 질량(kg)"/>
                 </properties>
               </component>
-              <component id="2a754" class="javax.swing.JTextField" binding="cabinWeight">
+              <component id="2a754" class="javax.swing.JTextField" binding="cabinMass">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -154,7 +154,7 @@
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="중력 설정(m/s²)"/>
+                  <text value="중력(m/s²)"/>
                 </properties>
               </component>
               <grid id="88a61" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -220,7 +220,7 @@
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="0.22"/>
+                  <text value="22"/>
                 </properties>
               </component>
               <component id="1e462" class="javax.swing.JLabel">
@@ -228,10 +228,10 @@
                   <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="승객 무게(kg)"/>
+                  <text value="승객 질량(kg)"/>
                 </properties>
               </component>
-              <component id="bc69" class="javax.swing.JTextField" binding="passengerWeight">
+              <component id="bc69" class="javax.swing.JTextField" binding="passengerMass">
                 <constraints>
                   <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -244,7 +244,7 @@
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="캐빈 정원 설정(명)"/>
+                  <text value="캐빈 정원(명)"/>
                 </properties>
               </component>
               <component id="b7752" class="javax.swing.JTextField" binding="cabinLimitPeople">
@@ -260,7 +260,7 @@
                   <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="캐빈 한계 무게 설정(kg)"/>
+                  <text value="캐빈 한계 질량(kg)"/>
                 </properties>
               </component>
               <component id="e7f02" class="javax.swing.JTextField" binding="cabinLimitWeight">
