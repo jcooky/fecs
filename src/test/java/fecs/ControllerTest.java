@@ -70,10 +70,12 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testStopSimulationWithOthers() throws Exception {
     // when
-    when(engine.getState()).thenReturn((ICircumstance.STATE_CRASH << 1) | Engine.STATE_START);
+    when(engine.getState()).thenReturn((ICircumstance.STATE_FIRE<<1)|Engine.STATE_START);
+    when(engine.getEngineState()).thenReturn(Engine.STATE_START);
+    when(engine.getCircumstanceState()).thenReturn(ICircumstance.STATE_CRASH);
     controller.stopSimulation();
 
-    verify(engine).setEngineState((ICircumstance.STATE_CRASH << 1));
+    verify(engine).setEngineState(Engine.STATE_STOP);
   }
 
   @Test
@@ -88,7 +90,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
     // when
     when(engine.getGravity()).thenReturn(0.0);
     when(ui.getGravity()).thenReturn(mock(JTextField.class));
-    controller.changeGravity("9.8");
+    controller.changeGravity(Engine.earthGravity.toString());
 
     // then
     verify(engine).setGravity(Engine.earthGravity);
@@ -110,13 +112,13 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testChangeGravityUnder0() throws Exception {
     // when
-    when(engine.getGravity()).thenReturn(0.0);
+    when(engine.getGravity()).thenReturn(1.0);
     when(ui.getGravity()).thenReturn(mock(JTextField.class));
     controller.changeGravity("-1.0");
 
     // then
-    verify(engine).setGravity(0.0);
-    verify(ui.getGravity()).setText("0.0");
+    verify(engine).setGravity(1.0);
+    verify(ui.getGravity()).setText("1.0");
   }
 
   @Test
