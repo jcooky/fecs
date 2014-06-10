@@ -1,38 +1,23 @@
-//package fecs;
-//
-//import fecs.model.Cabin;
-//import fecs.model.Floor;
-//import fecs.model.Vector;
-//import org.springframework.beans.factory.InitializingBean;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//
-//import java.awt.*;
-//import java.awt.geom.Rectangle2D;
-//import java.util.Arrays;
-//
-///**
-// * Created by jcooky on 2014. 3. 23..
-// */
-//@Component
-//public class CabinsController implements InitializingBean {
-//  private static final Dimension SIZE = new Dimension(50, 50);
-//
-//  private Cabin left = new Cabin(null, new Rectangle2D.Double(0.0, 0.0, SIZE.getWidth(), SIZE.getHeight()));
-//  private Cabin right = new Cabin(null, new Rectangle2D.Double(left.x + SIZE.getWidth() + 30.0, 0.0, SIZE.getWidth(), SIZE.getHeight()));
-//  private Cabin both[] = new Cabin[]{left, right};
-//
-//  @Autowired
-//  private FloorSet floorSet;
-//
-//  public void target(Floor floor) {
-//    Cabin cabin = null;
-//    double dy_l = floor.y - left.y, dy_r = floor.y - right.y;
-//    if (Cabin.State.STOP.equals(left.getState()) && Cabin.State.STOP.equals(right.getState())) {
-//      // 둘 다 멈춰 있는 경우
-//      cabin = Math.abs(dy_l) <= Math.abs(dy_r) ? left : right;
-//    } else if (!Cabin.State.STOP.equals(left.getState()) && !Cabin.State.STOP.equals(right.getState())) {
-//      // 둘 다 움직이고 있는 경우
+package fecs;
+
+import fecs.simulator.Cabin;
+import fecs.simulator.Floor;
+import fecs.model.Vector;
+
+/**
+* Created by jcooky on 2014. 3. 23..
+*/
+public class CabinsController {
+
+  public static void control(Cabin left, Cabin right, Floor floor) {
+    Cabin cabin = null;
+    double dy_l = floor.getPosition() - left.getPosition(), dy_r = floor.getPosition() - right.getPosition();
+    if (Cabin.State.STOP.equals(left.getState()) && Cabin.State.STOP.equals(right.getState())) {
+      // 둘 다 멈춰 있는 경우
+      cabin = Math.abs(dy_l) <= Math.abs(dy_r) ? left : right;
+    } else if (!Cabin.State.STOP.equals(left.getState()) && !Cabin.State.STOP.equals(right.getState())) {
+      // 둘 다 움직이고 있는 경우
+      return;
 //      if (Vector.UP.equals(left.getVector()) && Vector.UP.equals(right.getVector())) {
 //
 //        if (dy_l < 0 && dy_r < 0) {
@@ -41,10 +26,10 @@
 //          } else if (Math.abs(dy_l) > Math.abs(dy_r)) {
 //            cabin = right;
 //          } else {
-//            cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//            cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //          }
 //        } else if (dy_l >= 0 && dy_r >= 0) {
-//          cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//          cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //        } else if (dy_l < 0 && dy_r >= 0) {
 //          cabin = left;
 //        } else if (dy_l >= 0 && dy_r < 0) {
@@ -57,10 +42,10 @@
 //          } else if (Math.abs(dy_l) > Math.abs(dy_r)) {
 //            cabin = right;
 //          } else {
-//            cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//            cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //          }
 //        } else if (dy_l <= 0 && dy_r <= 0) {
-//          cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//          cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //        } else if (dy_l > 0 && dy_r <= 0) {
 //          cabin = left;
 //        } else if (dy_l <= 0 && dy_r > 0) {
@@ -73,10 +58,10 @@
 //          } else if (Math.abs(dy_l) > Math.abs(dy_r)) {
 //            cabin = right;
 //          } else {
-//            cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//            cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //          }
 //        } else if (dy_l >= 0 && dy_r <= 0) {
-//          cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//          cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //        } else if (dy_l < 0 && dy_r <= 0) {
 //          cabin = left;
 //        } else if (dy_l >= 0 && dy_r > 0) {
@@ -89,49 +74,24 @@
 //          } else if (Math.abs(dy_l) > Math.abs(dy_r)) {
 //            cabin = right;
 //          } else {
-//            cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//            cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //          }
 //        } else if (dy_l <= 0 && dy_r >= 0) {
-//          cabin = left.getNextSet().size() < right.getNextSet().size() ? left : right;
+//          cabin = left.getQueue().size() < right.getQueue().size() ? left : right;
 //        } else if (dy_l > 0 && dy_r >= 0) {
 //          cabin = left;
 //        } else if (dy_l <= 0 && dy_r < 0) {
 //          cabin = right;
 //        }
 //      }
-//    } else {
-//      // 한 쪽 만 멈춰 있는 경우
-//      cabin = Cabin.State.STOP.equals(left.getState()) ? left : right;
-//    }
-//    cabin.setTarget(floor);
-//  }
-//
-//  @Override
-//  public void afterPropertiesSet() throws Exception {
-//    Floor floor = floorSet.get(1);
-//
-//    for (Cabin cabin : getBoth()) {
-//      cabin.y = floor.y;
-//    }
-//  }
-//
-//  @Override
-//  public String toString() {
-//    return "CabinsController{" +
-//        "floorSet=" + floorSet +
-//        "cabins=" + Arrays.asList(getBoth()).toString() +
-//        '}';
-//  }
-//
-//  public Cabin[] getBoth() {
-//    return both;
-//  }
-//
-//  public void setLeft(Cabin left) {
-//    this.left = left;
-//  }
-//
-//  public void setRight(Cabin right) {
-//    this.right = right;
-//  }
-//}
+    } else {
+      // 한 쪽 만 멈춰 있는 경우
+      Cabin stoppedCabin = Cabin.State.STOP.equals(left.getState()) ? left : right,
+        movingCabin = stoppedCabin.equals(right) ? left : right;
+      if(movingCabin.getTarget()==null || movingCabin.getTarget().equals(floor)) return;
+      else cabin = stoppedCabin;
+    }
+    cabin.move(floor);
+  }
+
+}

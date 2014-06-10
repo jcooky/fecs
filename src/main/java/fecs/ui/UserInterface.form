@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="rootPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="9" y="13" width="720" height="608"/>
+      <xy x="9" y="13" width="1094" height="608"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -31,7 +31,7 @@
           </grid>
         </children>
       </grid>
-      <grid id="ef94f" layout-manager="GridLayoutManager" row-count="8" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="ef94f" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -39,203 +39,271 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="c4201" class="javax.swing.JButton" binding="startSim">
+          <component id="f09a4" class="javax.swing.JButton" binding="earthQuake">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="시뮬레이션 시작"/>
-            </properties>
-          </component>
-          <component id="dd356" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="승객 생성 설정"/>
-            </properties>
-          </component>
-          <component id="6899b" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="엘리베이터 무게 설정"/>
-            </properties>
-          </component>
-          <component id="a52bd" class="javax.swing.JButton" binding="stopSim">
-            <constraints>
-              <grid row="0" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="시뮬레이션 정지"/>
-            </properties>
-          </component>
-          <component id="efdd5" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="2" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="전체 승객 수 설정"/>
-            </properties>
-          </component>
-          <component id="cf048" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="중력 설정"/>
-            </properties>
-          </component>
-          <component id="52042" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="1" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="브레이크 강도 설정"/>
-            </properties>
-          </component>
-          <component id="23050" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="3" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="모터 출력 설정"/>
-            </properties>
-          </component>
-          <component id="1f06d" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="정원초과시 더 탈 확률"/>
-            </properties>
-          </component>
-          <component id="1e462" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="4" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="승객 무게 설정"/>
-            </properties>
-          </component>
-          <component id="4b33d" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="캐빈 정원 설정"/>
-            </properties>
-          </component>
-          <component id="c11e3" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="5" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="캐빈 한계 무게 설정"/>
-            </properties>
-          </component>
-          <component id="9ef0f" class="javax.swing.JLabel">
-            <constraints>
-              <grid row="6" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="장애 상황 수동 발생"/>
-            </properties>
-          </component>
-          <component id="2aaf8" class="javax.swing.JButton" binding="화재Button" default-binding="true">
-            <constraints>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="화재"/>
-            </properties>
-          </component>
-          <component id="f09a4" class="javax.swing.JButton" default-binding="true">
-            <constraints>
-              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="지진"/>
             </properties>
           </component>
-          <component id="a0718" class="javax.swing.JButton" default-binding="true">
+          <grid id="9fdad" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="7" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="true"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="c4201" class="javax.swing.JButton" binding="startSim">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="시뮬레이션 시작"/>
+                </properties>
+              </component>
+              <component id="a52bd" class="javax.swing.JButton" binding="stopSim">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="시뮬레이션 정지"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="fd781" layout-manager="GridLayoutManager" row-count="5" column-count="4" same-size-horizontally="true" same-size-vertically="true" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="610" height="509"/>
+              </grid>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="dd356" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="초당 승객 생성(명)"/>
+                </properties>
+              </component>
+              <component id="ee8dd" class="javax.swing.JTextField" binding="howMany">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="1"/>
+                </properties>
+              </component>
+              <component id="52042" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="브레이크 강도(Nm/s)"/>
+                </properties>
+              </component>
+              <component id="6070a" class="javax.swing.JTextField" binding="forceBreak">
+                <constraints>
+                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="10000"/>
+                </properties>
+              </component>
+              <component id="6899b" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="캐빈 질량(kg)"/>
+                </properties>
+              </component>
+              <component id="2a754" class="javax.swing.JTextField" binding="cabinMass">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="700"/>
+                </properties>
+              </component>
+              <component id="efdd5" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="전체 승객 수(명)"/>
+                </properties>
+              </component>
+              <component id="f8c0a" class="javax.swing.JTextField" binding="totalNumPassengers">
+                <constraints>
+                  <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="30"/>
+                </properties>
+              </component>
+              <component id="cf048" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="중력(m/s²)"/>
+                </properties>
+              </component>
+              <grid id="88a61" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="562a2" class="javax.swing.JComboBox" binding="planetCombo">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <lightWeightPopupEnabled value="false"/>
+                      <model>
+                        <item value="지구"/>
+                        <item value="달"/>
+                        <item value="화성"/>
+                        <item value="금성"/>
+                        <item value="직접입력"/>
+                      </model>
+                    </properties>
+                  </component>
+                  <component id="8c40f" class="javax.swing.JTextField" binding="gravity">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="4" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text value="9.80665"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <component id="23050" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="모터 출력(Nm/s)"/>
+                </properties>
+              </component>
+              <component id="d3033" class="javax.swing.JTextField" binding="motorOutput">
+                <constraints>
+                  <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="27000"/>
+                </properties>
+              </component>
+              <component id="1f06d" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="정원초과시 더 탈 확률(%)"/>
+                </properties>
+              </component>
+              <component id="c7913" class="javax.swing.JTextField" binding="moreEnterProbability">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="22"/>
+                </properties>
+              </component>
+              <component id="1e462" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="승객 질량(kg)"/>
+                </properties>
+              </component>
+              <component id="bc69" class="javax.swing.JTextField" binding="passengerMass">
+                <constraints>
+                  <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="80"/>
+                </properties>
+              </component>
+              <component id="4b33d" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="캐빈 정원(명)"/>
+                </properties>
+              </component>
+              <component id="b7752" class="javax.swing.JTextField" binding="cabinLimitPeople">
+                <constraints>
+                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="12"/>
+                </properties>
+              </component>
+              <component id="c11e3" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="캐빈 한계 질량(kg)"/>
+                </properties>
+              </component>
+              <component id="e7f02" class="javax.swing.JTextField" binding="cabinLimitWeight">
+                <constraints>
+                  <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="1660"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <component id="2aaf8" class="javax.swing.JButton" binding="fire">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="화재"/>
+            </properties>
+          </component>
+          <component id="a0718" class="javax.swing.JButton" binding="flood">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="수해"/>
             </properties>
           </component>
-          <component id="b2f62" class="javax.swing.JButton" default-binding="true">
+          <component id="b2f62" class="javax.swing.JButton" binding="crash">
             <constraints>
-              <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="추락"/>
             </properties>
           </component>
-          <component id="ee8dd" class="javax.swing.JTextField" binding="howMany">
+          <component id="9ef0f" class="javax.swing.JLabel">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="2a754" class="javax.swing.JTextField" binding="cabinWeight">
-            <constraints>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="8c40f" class="javax.swing.JTextField" binding="gravity">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value=""/>
+              <text value="장애 상황 수동 발생"/>
             </properties>
-          </component>
-          <component id="c7913" class="javax.swing.JTextField" binding="moreEnterProbability">
-            <constraints>
-              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="b7752" class="javax.swing.JTextField" binding="cabinLimitPeople">
-            <constraints>
-              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="6070a" class="javax.swing.JTextField" binding="forceBreak">
-            <constraints>
-              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="f8c0a" class="javax.swing.JTextField" binding="totalNumPassengers">
-            <constraints>
-              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="d3033" class="javax.swing.JTextField" binding="motorOutput">
-            <constraints>
-              <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="bc69" class="javax.swing.JTextField" binding="passengerWeight">
-            <constraints>
-              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-          </component>
-          <component id="e7f02" class="javax.swing.JTextField" binding="cabinLimitWeight">
-            <constraints>
-              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
           </component>
         </children>
       </grid>

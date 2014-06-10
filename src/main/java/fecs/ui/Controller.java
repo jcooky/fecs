@@ -1,7 +1,13 @@
-package fecs;
+package fecs.ui;
 
-import fecs.physics.Engine;
-import fecs.ui.UserInterface;
+import fecs.Circumstance;
+import fecs.interfaces.ICircumstance;
+import fecs.model.CabinType;
+import fecs.model.FloorType;
+import fecs.simulator.Cabin;
+import fecs.simulator.Engine;
+import fecs.simulator.Floor;
+import fecs.simulator.PassengerMaker;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,28 +30,76 @@ public class Controller {
   private UserInterface ui;
 
   public void startSimulation() {
-    int state = engine.getState();
+    int state = engine.getState() & 1;
 
-    if ((state & Engine.STATE_START) != 0) {
-      displayError();
+    if (Engine.STATE_START == state) {
+      displayError("already started");
       return;
     }
-
-    engine.setState(state | Engine.STATE_START);
+//    fecs.Fecs.getInterpreter().exec("import DefaultCircumstance");
+//    fecs.Fecs.getInterpreter().exec("reload (DefaultCircumstance)");
+    engine.setEngineState(Engine.STATE_START);
   }
 
   public void stopSimulation() {
-    int state = engine.getState();
+    int state = engine.getState() & 1;
 
     if (state == Engine.STATE_STOP) {
-      displayError();
+      displayError("already stopped");
       return;
     }
-    engine.setState(Engine.STATE_STOP);
+    engine.setEngineState(Engine.STATE_STOP);
   }
 
   public void triggerFail(String name) {
+    int state;
 
+    if (ICircumstance.FIRE.equals(name)) {
+      ICircumstance c = Circumstance.get(ICircumstance.FIRE).setParameter("validate",false);
+      String answer = JOptionPane.showInputDialog("which floor? (RANDOM,-1,2~10)");
+
+      Integer val;
+      if(answer.equals("RANDOM")) {
+        val = (int)(Math.random() * 10);
+        if(val==0) val--;
+      }else{
+        try { val = Integer.parseInt(answer); }
+        catch (NumberFormatException e) { displayError("not a number"); return; }
+        if (!(val == -1 || (val >= 2 && val <= 10))) { displayError("not in a valid range"); return; }
+      }
+      Floor fireFloor = engine.getFloors().get(FloorType.valueOf(val));
+      c.setParameter("floor", fireFloor);
+
+      c.trigger();
+
+      state = ICircumstance.STATE_FIRE;
+    } else if (ICircumstance.CRASH.equals(name)) {
+      String answer = JOptionPane.showInputDialog("which cabin? (LEFT, RIGHT)");
+      if(!answer.equals("LEFT") && !answer.equals("RIGHT")){
+        displayError("only 'LEFT' or 'RIGHT' input available");
+        return;
+      }
+      Cabin crashCabin = engine.getCabins().get(CabinType.valueOf(answer));
+
+      Circumstance.get(ICircumstance.CRASH)
+          .setParameter("validate", false)
+          .setParameter("cabin", crashCabin)
+          .trigger();
+
+      state = ICircumstance.STATE_CRASH;
+    } else if (ICircumstance.EARTH_QUAKE.equals(name)) {
+      Circumstance.get(ICircumstance.EARTH_QUAKE).setParameter("startTime", System.currentTimeMillis());
+
+      state = ICircumstance.STATE_EARTH_QUAKE;
+    } else if (ICircumstance.FLOOD.equals(name)) {
+      Circumstance.get(ICircumstance.FLOOD).setParameter("startTime", System.currentTimeMillis());
+
+      state = ICircumstance.STATE_FLOOD;
+    } else {
+      state = ICircumstance.STATE_DEFAULT;
+    }
+
+    engine.setCircumstanceState(state);
   }
 
   public void changeGravity(String gravity) {
@@ -54,8 +108,7 @@ public class Controller {
       Double val = Double.parseDouble(gravity);
 
       if (val > 50) val = 50.0;
-      else if (val < 0) val = 0.0;
-      else val = 9.8;
+      else if (val < 1) val = 1.0;
 
       engine.setGravity(val);
       ui.getGravity().setText(String.valueOf(val));
@@ -72,16 +125,15 @@ public class Controller {
 
       if (val > 0) {
         Double cabinLimitWeight = engine.getCabinLimitWeight();
-        Double cabinWeight = engine.getCabinWeight();
-        Double passengerWeight = engine.getPassengerWeight();
+        Double cabinWeight = engine.getCabinMass();
+        Double passengerWeight = engine.getPassengerMass();
 
         if (cabinWeight + val * passengerWeight > cabinLimitWeight) {
-          val = (int)(Math.floor((cabinLimitWeight - cabinWeight)/passengerWeight));
+          val = (int) (Math.floor((cabinLimitWeight - cabinWeight) / passengerWeight));
           ui.getCabinLimitPeople().setText(val.toString());
         }
         engine.setCabinLimitPeople(val);
-      }
-      else {
+      } else {
         throw new NumberFormatException();
       }
     } catch (NumberFormatException e) {
@@ -95,13 +147,13 @@ public class Controller {
       Double val = Double.parseDouble(weight);
 
       if (val > 0) {
-        engine.setCabinWeight(val);
+        engine.setCabinMass(val);
       } else {
         throw new NumberFormatException();
       }
     } catch (NumberFormatException e) {
       displayError(e.getMessage());
-      ui.getCabinWeight().setText(engine.getCabinWeight().toString());
+      ui.getCabinMass().setText(engine.getCabinMass().toString());
     }
   }
 
@@ -109,12 +161,12 @@ public class Controller {
     try {
       Double val = Double.parseDouble(weight);
       if (val > 0)
-        engine.setPassengerWeight(val);
+        engine.setPassengerMass(val);
       else
         throw new NumberFormatException();
     } catch (NumberFormatException e) {
       displayError(e.getMessage());
-      ui.getPassengerWeight().setText(engine.getPassengerWeight().toString());
+      ui.getPassengerMass().setText(engine.getPassengerMass().toString());
     }
   }
 
@@ -126,7 +178,8 @@ public class Controller {
         passengerMaker.setMax(val);
         Integer howMany = passengerMaker.getHowMany();
 
-        if (howMany >= val) {
+        if (howMany > val) {
+          displayError();
           changePassengerCreated(numPassengers);
         }
       } else
@@ -145,7 +198,7 @@ public class Controller {
         passengerMaker.setHowMany(val);
         Integer max = passengerMaker.getMax();
 
-        if (val >= max) {
+        if (val > max) {
           displayError();
           changeTotalNumPassengers(numCreatedPerSec);
         }
@@ -159,9 +212,9 @@ public class Controller {
 
   public void changeMoreEnterProbability(String moreEnterProbability) {
     try {
-      Double val = Double.parseDouble(moreEnterProbability);
+      Double val = Double.parseDouble(moreEnterProbability)/100;
 
-      if (val > 0) {
+      if (val >= 0 && val <= 1) {
         engine.setMoreEnterProbability(val);
       } else {
         throw new NumberFormatException();
@@ -212,11 +265,11 @@ public class Controller {
       Double val = Double.parseDouble(cabinLimitWeight);
 
       if (val > 0) {
-        Double passengerWeight = engine.getPassengerWeight();
-        Double cabinWeight = engine.getCabinWeight();
+        Double passengerWeight = engine.getPassengerMass();
+        Double cabinWeight = engine.getCabinMass();
         Integer cabinLimitPeople = engine.getCabinLimitPeople();
 
-        if (val > cabinLimitPeople * passengerWeight + cabinWeight) {
+        if (val < cabinLimitPeople * passengerWeight + cabinWeight) {
           val = cabinLimitPeople * passengerWeight + cabinWeight;
           ui.getCabinLimitWeight().setText(val.toString());
         }
@@ -233,11 +286,11 @@ public class Controller {
     }
   }
 
-  private void displayError() {
+  public void displayError() {
     displayError("Error");
   }
 
-  private void displayError(String message) {
+  public void displayError(String message) {
     JOptionPane.showMessageDialog(null, StringUtils.defaultIfEmpty(message, "Error"));
   }
 }

@@ -1,11 +1,16 @@
 package fecs;
 
-import fecs.physics.Engine;
+import fecs.interfaces.ICircumstance;
+import fecs.interfaces.IPassengerMaker;
+import fecs.simulator.Engine;
 import fecs.ui.UserInterface;
+import org.python.util.PythonInterpreter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,15 +22,22 @@ import java.io.IOException;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan(basePackages = "fecs")
-public class Fecs implements CommandLineRunner {
+public class Fecs implements CommandLineRunner{
+  private static ConfigurableApplicationContext applicationContext;
+
   @Autowired
   private UserInterface userInterface;
 
   @Autowired
   private Engine engine;
 
+  @Autowired
+  private IPassengerMaker passengerMaker;
+
   @Override
   public void run(String... args) throws Exception {
+    initJython();
+
     userInterface.run();
   }
 
@@ -33,6 +45,24 @@ public class Fecs implements CommandLineRunner {
     SpringApplication app = new SpringApplication(Fecs.class);
     app.setHeadless(false);
 
-    app.run(args);
+    Fecs.applicationContext = app.run(args);
   }
+  protected static PythonInterpreter interp= new PythonInterpreter();
+  public static PythonInterpreter getInterpreter(){return interp;}
+  private void initJython(){
+    interp.execfile(ClassLoader.getSystemResourceAsStream("__init__.py"));
+    interp.set("ui", userInterface);
+    interp.set("engine", engine);
+    interp.set("passengerMaker",passengerMaker);
+    interp.exec("DefaultCircumstance.ui=ui");
+    interp.exec("DefaultCircumstance.engine=engine");
+    interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
+//    interp.set("crash", Circumstance.get(ICircumstance.CRASH));
+//    interp.exec("DefaultCircumstance.crash=crash");
+    interp.exec("DefaultCircumstance.crashCircumstance=CrashCircumstance");
+    interp.set("default", Circumstance.get(ICircumstance.DEFAULT));
+    interp.exec("FireCircumstance.defaultCircumstance=default");
+  }
+
+  public static ApplicationContext getApplicationContext() { return applicationContext; }
 }

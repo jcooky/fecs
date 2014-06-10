@@ -1,10 +1,11 @@
 package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
-import fecs.model.Floor;
+import fecs.simulator.Floor;
 import fecs.model.FloorType;
-import fecs.model.Passenger;
-import fecs.physics.Engine;
+import fecs.simulator.Passenger;
+import fecs.simulator.Engine;
+import fecs.simulator.PassengerMaker;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -37,13 +38,13 @@ public class PassengerMakerTest extends AbstractSpringBasedTestSupport {
   }
 
   @Test
-  public void testUpdate() throws Exception {
+  public void testMakePassenger() throws Exception {
     // given
     passengerMaker.setHowMany(10);
     passengerMaker.setMax(30);
 
     when(engine.getFloors()).thenReturn(floors);
-    passengerMaker.update(10000);
+    passengerMaker.makePassenger();
 
     verify(floors.get(FloorType.FIRST), times(10)).add(any(Passenger.class));
   }

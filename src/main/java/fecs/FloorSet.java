@@ -26,7 +26,7 @@
 //  public Integer containsHeight(int y, int height) {
 //    for (Floor floor : this) {
 //      if (floor.containsHeight(y, height)) {
-//        return floor.getFloor();
+//        return floor.getNum();
 //      }
 //    }
 //
@@ -49,7 +49,7 @@
 //
 //  public Floor get(int n) {
 //    for (Floor floor : this ) {
-//      if (floor.getFloor() == n)
+//      if (floor.getNum() == n)
 //        return floor;
 //    }
 //
@@ -58,9 +58,9 @@
 //
 //  public void addPassenger(Vector vector, Passenger passenger) throws InterruptedException {
 //    if (Passenger.State.WAIT.equals(passenger.getState())) {
-//      Floor floor = get(passenger.getFloor());
+//      Floor floor = get(passenger.getNum());
 //      floor.getPassengers().get(vector).put(passenger);
-//      cabinsController.target(floor);
+//      cabinsController.control(floor);
 //    }
 //  }
 //
