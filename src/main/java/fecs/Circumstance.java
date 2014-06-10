@@ -4,7 +4,6 @@ import fecs.interfaces.ICircumstance;
 import org.python.core.Py;
 import org.python.core.PyObject;
 import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,12 +21,10 @@ public abstract class Circumstance implements ICircumstance {
       this.put(DEFAULT,new DefaultCircumstance());
     }
   };
-  protected long elapsedTime;
-  protected String name;
-  private PythonInterpreter interp;
+  private String name;
   private PyObject pyCircumstance;
   protected Circumstance(String name) {
-    pyCircumstance = Fecs.interp.get(name+"Circumstance");
+    pyCircumstance = Fecs.getInterpreter().get(name+"Circumstance");
     this.name = name;
   }
 
@@ -42,7 +39,8 @@ public abstract class Circumstance implements ICircumstance {
 
   public Object getParameter(String key) {
     PyObject m = pyCircumstance.__getattr__("getParameter");
-    if(m==null) return null;
+    if(m==null)
+      {return null;}
     return m.__call__(new PyString(key)).__tojava__(Object.class);
   }
 

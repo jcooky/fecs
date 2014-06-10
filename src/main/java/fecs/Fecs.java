@@ -47,7 +47,7 @@ public class Fecs implements CommandLineRunner{
 
     Fecs.applicationContext = app.run(args);
   }
-  protected static PythonInterpreter interp= new PythonInterpreter();
+  protected static final PythonInterpreter interp= new PythonInterpreter();
   public static PythonInterpreter getInterpreter(){return interp;}
   private void initJython(){
     interp.execfile(ClassLoader.getSystemResourceAsStream("__init__.py"));
@@ -57,8 +57,6 @@ public class Fecs implements CommandLineRunner{
     interp.exec("DefaultCircumstance.ui=ui");
     interp.exec("DefaultCircumstance.engine=engine");
     interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
-//    interp.set("crash", Circumstance.get(ICircumstance.CRASH));
-//    interp.exec("DefaultCircumstance.crash=crash");
     interp.exec("DefaultCircumstance.crashCircumstance=CrashCircumstance");
     interp.set("default", Circumstance.get(ICircumstance.DEFAULT));
     interp.exec("FireCircumstance.defaultCircumstance=default");

@@ -36,8 +36,6 @@ public class Controller {
       displayError("already started");
       return;
     }
-//    fecs.Fecs.getInterpreter().exec("import DefaultCircumstance");
-//    fecs.Fecs.getInterpreter().exec("reload (DefaultCircumstance)");
     engine.setEngineState(Engine.STATE_START);
   }
 
@@ -60,7 +58,7 @@ public class Controller {
 
       Integer val;
       if(answer.equals("RANDOM")) {
-        val = (int)(Math.random() * 10);
+        val = (int)(new java.util.Random().nextInt(10));
         if(val==0) val--;
       }else{
         try { val = Integer.parseInt(answer); }

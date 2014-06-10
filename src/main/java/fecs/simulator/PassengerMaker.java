@@ -18,8 +18,6 @@ public class PassengerMaker implements IPassengerMaker {
 
   private Integer now = 0, howMany = 1, max = 30;
 
-  private Long lastUpdateTime = null;
-
   private List<Passenger> passengers = new ArrayList<>();
 
   /* getters and setters */
@@ -74,7 +72,7 @@ public class PassengerMaker implements IPassengerMaker {
       dest = FloorType.values()[rand>0?rand+1:rand];
 
       Passenger passenger = new Passenger(start.getValue(), dest.getValue());
-
+      passengers.add(passenger);
       engine.getFloors().get(FloorType.FIRST).add(passenger);
       now++;
     }

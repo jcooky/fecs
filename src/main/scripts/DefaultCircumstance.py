@@ -67,20 +67,21 @@ def trigger():
     # if cabin.getTarget() is None: continue
     # out.println("updating cabin"+str(cabin)+" by "+str(this["deltaTime"]))
     engine.updateCabin(cabin,this["deltaTime"])
-    floor = cabin.getTarget()
     # out.println(cabins)
-    if cabin.getState()==cabin.State.STOP and floor is not None:
-    # if abs(floor.getPosition()-cabin.getPosition())<4: #arriving threshold is +4 ~ -4
-      # if cabin.getTaget() is not None:
-      #     out.println(cabin.getTarget())
-      #     if cabin.getTarget()==floor:
-      out.println("cabin("+str(cabin)+") arrived on floor("+str(floor.getNum())+")")
+    if cabin.getState()==cabin.State.STOP:
+      out.println("cabin("+str(cabin.getName())+") arrived ")
+      floor = None
+      for f in floors.values():
+        if cabin.getPosition() == f.getPosition():
+          floor = f
+      out.println("on floor("+str(floor.getNum())+")")
       for p in cabin.getPassengers().toArray():
         if p.getDest()==floor.getNum() :
           # out.println(str(p)+'wants to take off')
           p.setState(p.State.NO_WAIT)
           cabin.getPassengers().remove(p)
           floor.getPassengers().add(p)
+      cabin.getQueue().remove(floor);
       if cabin.getQueue().size()>0 : cabin.move() #to next queued floor
   firstFloor = floors.get(FloorType.FIRST)
   firstFloorPassengers = firstFloor.getPassengers()

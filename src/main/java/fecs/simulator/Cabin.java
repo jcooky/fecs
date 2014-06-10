@@ -22,7 +22,9 @@ public class Cabin extends Place implements Serializable {
   private Floor target = null;
   private double vector = 0d,
     velocity = 0d;
-
+  public Cabin(String name){
+    this.name=name;
+  }
   public void move(Floor floor) {
     if (State.MOVE.equals(state)) {
       queue.add(floor);

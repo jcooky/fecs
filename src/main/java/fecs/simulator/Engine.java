@@ -25,7 +25,7 @@ import java.util.*;
 public class Engine implements Runnable, InitializingBean {
   static public final int STATE_STOP = 0b00,
       STATE_START = 0b01;
-  static public final double CABIN_MOVE_THRESHOLD=10*0.01; //10cm in m
+  static public final double CABIN_MOVE_THRESHOLD=10*0.01; //30cm in m
   static public final double RealToPixelRatio = Floor.PIXEL_HEIGHT / Floor.REAL_HEIGHT;
   private static final double TARGET_WIDTH = 300;
   private static final double TARGET_HEIGHT = 550;
@@ -133,13 +133,13 @@ public class Engine implements Runnable, InitializingBean {
         g.setColor(Color.BLACK);
         g.drawRect(x, (int) cabinY, (int)cabinW, (int)cabinH);
         //cabin fullness
-        g.drawString(passengers>=cabinLimitPeople?passengers>cabinLimitPeople?"초과":"만원":"", (int) (x + (cabinW / 2) - fsize), (int) (cabinY + (cabinH / 2.0) - fsize));
+        g.drawString(passengers>=cabinLimitPeople?passengers>cabinLimitPeople?"초과":"만원":"", (int) (x + (cabinW / 2.0) - fsize), (int) (cabinY + (cabinH / 2.0) - fsize));
         //passengers on cabin
-        g.drawString(String.format("%d명",passengers), (int) (x + (cabinW / 2) - (fsize * 2 / 2)), (int) (cabinY + (cabinH / 2.0)));
+        g.drawString(String.format("%d명",passengers), (int) (x + (cabinW / 2.0) - (fsize * 2.0 / 2.0)), (int) (cabinY + (cabinH / 2.0)));
         //cabin weight
         g.drawString(String.format("%.0fkg",mass(cabin)), x, (int) (cabinY + (cabinH / 2.0) + fsize));
         //cabin speed
-        g.drawString(String.format("%.1fm/s",Math.abs(cabin.getVelocity())), x, (int) (cabinY + (cabinH / 2.0) + (fsize * 2)));
+        g.drawString(String.format("%.1fm/s",Math.abs(cabin.getVelocity())), x, (int) (cabinY + (cabinH / 2.0) + (fsize * 2.0)));
       }
 
       for (Floor floor : floors.values()) {
@@ -163,15 +163,12 @@ public class Engine implements Runnable, InitializingBean {
   }
 
   public void updateCabin(Cabin cabin, double accel, double deltaTime) {
-    //accel = const
-    //vf=vi+ a*dt
-    //sf=si+integral(dv=vf-vi)=si+dt*(vf-vi)=si+dt*(a*dt)=si+a*dt^2
     if(deltaTime>0.2)return;
     double vi=cabin.getVelocity(),
-      vf=vi+accel*deltaTime;
-//    if(vf>50) vf = 0d;
+      vf=vi+accel*deltaTime; //vf=vi+ a*dt
+    if(Math.abs(vf)>20) vf = 0d;
     double ds=0.5*deltaTime*(vf+vi);
-    cabin.setPosition(cabin.getPosition() + ds);//(cabin.getVelocity() * deltaTime + 0.5 * (v1 * deltaTime)) * 16.6667);
+    cabin.setPosition(cabin.getPosition() + ds);//sf=si+integral(dv=vf-vi)=si+dt*(vf-vi)=si+dt*(a*dt)=si+a*dt^2
     cabin.setVelocity(vf);
 
     double min = floors.get(FloorType.TENTH).getPosition(),
@@ -186,7 +183,7 @@ public class Engine implements Runnable, InitializingBean {
       switch (cabin.getState()) {
         case MOVE:
           double vector = cabin.getVector();
-          double vectorUnit = vector/Math.abs(vector);
+          int vectorUnit = (int) (vector/Math.abs(vector));
           double motor = motorOutput*earthGravity*deltaTime; // Nm/s (weight) -> kgfm
           if(motor<=gravity){
             logger.debug("motor is too weak or gravity is too strong.");
@@ -194,18 +191,21 @@ public class Engine implements Runnable, InitializingBean {
           }
           Floor target = cabin.getTarget();
           double leftVector =target.getPosition()-cabin.getPosition();
-          double accel = motor/mass(cabin) * (leftVector/Math.abs(leftVector));
-          if(cabin.getVelocity()>1)
+          int leftVectorUnit = (int)(leftVector/Math.abs(leftVector));
+          double accel = motor/mass(cabin) * leftVectorUnit;
+          if(Math.abs(cabin.getVelocity())>1)
             accel *= ((Math.abs(vector*0.5) < Math.abs(leftVector)) ? 1 : -1) ; //brake on half point
-          logger.debug(String.format("%f -> %f (%f) : %f",cabin.getPosition(), target.getPosition(),vector,accel));
+          if (accel==Double.NaN)
+            {accel = vectorUnit;}
+//          logger.debug(String.format("%f -> %f (%f) : %f",cabin.getPosition(), target.getPosition(),vector,accel));
+          logger.debug(String.format("%s->%d, %f, %f, %f",cabin.getName(),target.getNum(),accel,leftVector,vector*0.5));
           updateCabin(cabin, accel, deltaTime);
 
-          if (((vectorUnit == Vector.DOWN.value() && 0 >= leftVector)
-              || (vectorUnit == Vector.UP.value() && 0 <= leftVector))
-            &&(Math.abs(leftVector)<CABIN_MOVE_THRESHOLD)) { //arrive
+          if (Math.abs(leftVector)<CABIN_MOVE_THRESHOLD) { //arrive
             cabin.setPosition(target.getPosition());
             cabin.stop();
-            cabin.getQueue().remove(target);
+//            cabin.getQueue().remove(target);
+            logger.debug(String.format("%s->%d done",cabin.getName(),target.getNum()));
           }
           break;
         case STOP:
@@ -227,7 +227,7 @@ public class Engine implements Runnable, InitializingBean {
 
   private void initCabins() {
     for(CabinType t : CabinType.values()){
-      Cabin cabin = new Cabin();
+      Cabin cabin = new Cabin(t.toString());
       cabin.setPosition(floors.get(FloorType.TENTH).getPosition());
       cabins.put(t, cabin);
     }
@@ -338,32 +338,6 @@ public class Engine implements Runnable, InitializingBean {
   public void setPassengerMass(Double passengerMass) {
     this.passengerMass = passengerMass;
   }
-
-
-//  public static double toPixelPosX(float posX) {
-//    return TARGET_WIDTH * posX / 100.f;
-//  }
-//
-//  public static float toPosX(double posX) {
-//    return (float) ((posX * 100.0 * 1.0) / TARGET_WIDTH);
-//  }
-//
-//  public static double toPixelPosY(float posY) {
-//    double h = TARGET_HEIGHT;
-//    return h - (1.0f * h) * posY / 100.0f;
-//  }
-//
-//  public static float toPosY(double posY) {
-//    return (float) (100.0 - ((posY * 100.0 * 1.0) / TARGET_HEIGHT));
-//  }
-//
-//  public static double toPixelWidth(float width) {
-//    return TARGET_WIDTH * width / 100.0f;
-//  }
-//
-//  public static double toPixelHeight(float height) {
-//    return TARGET_HEIGHT * height / 100.0f;
-//  }
 
   public Map<FloorType, Floor> getFloors() {
     return floors;

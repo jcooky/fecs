@@ -44,7 +44,7 @@ public class Passenger implements Serializable {
   }
 
 
-  @Override
+/*  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -56,15 +56,15 @@ public class Passenger implements Serializable {
     if (state != passenger.state) return false;
 
     return true;
-  }
+  }*/
 
-//  @Override
-//  public int hashCode() {
-//    int result = state != null ? state.hashCode() : 0;
-//    result = 31 * result + (dest != null ? dest.hashCode() : 0);
-//    result = 31 * result + (start != null ? start.hashCode() : 0);
-//    return result;
-//  }
+/*  @Override
+  public int hashCode() {
+    int result = state != null ? state.hashCode() : 0;
+    result = 31 * result + (dest != null ? dest.hashCode() : 0);
+    result = 31 * result + (start != null ? start.hashCode() : 0);
+    return result;
+  }*/
 
 
   public static enum State {
