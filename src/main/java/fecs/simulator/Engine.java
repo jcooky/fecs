@@ -129,7 +129,7 @@ public class Engine implements Runnable, InitializingBean {
         //passengers on cabin
         g.drawString(String.format("%d명",passengers), (int) (x + cabinW / 2.0 - fsize * 2.0 / 2.0), (int) (cabinY + cabinH / 2.0));
         //cabin weight
-        g.drawString(String.format("%.0fkg",mass(cabin)), x, (int) (cabinY + (cabinH / 2.0) + fsize));
+        g.drawString(String.format("%.0fkg",mass(cabin)), x, (int) (cabinY + cabinH / 2.0 + fsize));
         //cabin speed
         g.drawString(String.format("%.1fm/s",Math.abs(cabin.getVelocity())), x, (int) (cabinY + cabinH / 2.0 + fsize * 2.0));
       }
@@ -146,10 +146,10 @@ public class Engine implements Runnable, InitializingBean {
         g.drawString(Integer.toString(passengers), (int) (1 + (double) (Floor.PIXEL_WIDTH) / 2.0 - (double) fsize / 2.0),
             (int) (floorY + (double) Floor.PIXEL_HEIGHT / 2.0));
       }
-      if((state>>1) == CircumstanceType.FIRE.state()) {
+      if(state>>1 == CircumstanceType.FIRE.state()) {
         Floor firedFloor = (Floor)Circumstance.get(CircumstanceType.FIRE).getParameter("floor");
         if(null!=firedFloor)
-          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * REAL_TO_PIXEL_RATIO +((double) Floor.PIXEL_HEIGHT/2.0 + fsize * 2.0)));
+          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * REAL_TO_PIXEL_RATIO + (double) Floor.PIXEL_HEIGHT/2.0 + fsize * 2.0));
       }
       renderer.flush();
   }
