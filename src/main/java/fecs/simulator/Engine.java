@@ -26,16 +26,9 @@ public class Engine implements Runnable, InitializingBean {
       STATE_START = 0b01;
   static public final double CABIN_MOVE_THRESHOLD=10*0.01; //30cm in m
   static public final double RealToPixelRatio = Floor.PIXEL_HEIGHT / Floor.REAL_HEIGHT;
-  private static final double TARGET_WIDTH = 300;
-  private static final double TARGET_HEIGHT = 550;
-
-  private static final double ACCEL = 0.1;
 
   @Autowired
   private UserInterface ui;
-
-  @Autowired
-  private PassengerMaker passengerMaker;
 
   private final Logger logger = LoggerFactory.getLogger(Engine.class);
 
@@ -55,7 +48,7 @@ public class Engine implements Runnable, InitializingBean {
   private Map<CabinType, Cabin> cabins = new EnumMap<>(CabinType.class);
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
   private Double cabinMass = 700d;
-  private Integer state = (CircumstanceType.DEFAULT.state() <<1);
+  private Integer state = CircumstanceType.DEFAULT.state() <<1;
   private Double forceBreak = 10000d;
   private Double motorOutput = 27000d;
   private Integer cabinLimitPeople = 12;
@@ -132,13 +125,13 @@ public class Engine implements Runnable, InitializingBean {
         g.setColor(Color.BLACK);
         g.drawRect(x, (int) cabinY, (int)cabinW, (int)cabinH);
         //cabin fullness
-        g.drawString(passengers>=cabinLimitPeople?passengers>cabinLimitPeople?"초과":"만원":"", (int) (x + (cabinW / 2.0) - fsize), (int) (cabinY + (cabinH / 2.0) - fsize));
+        g.drawString(passengers>=cabinLimitPeople?passengers>cabinLimitPeople?"초과":"만원":"", (int) (x + cabinW / 2.0 - fsize), (int) (cabinY + cabinH / 2.0 - fsize));
         //passengers on cabin
-        g.drawString(String.format("%d명",passengers), (int) (x + (cabinW / 2.0) - (fsize * 2.0 / 2.0)), (int) (cabinY + (cabinH / 2.0)));
+        g.drawString(String.format("%d명",passengers), (int) (x + cabinW / 2.0 - fsize * 2.0 / 2.0), (int) (cabinY + cabinH / 2.0));
         //cabin weight
         g.drawString(String.format("%.0fkg",mass(cabin)), x, (int) (cabinY + (cabinH / 2.0) + fsize));
         //cabin speed
-        g.drawString(String.format("%.1fm/s",Math.abs(cabin.getVelocity())), x, (int) (cabinY + (cabinH / 2.0) + (fsize * 2.0)));
+        g.drawString(String.format("%.1fm/s",Math.abs(cabin.getVelocity())), x, (int) (cabinY + cabinH / 2.0 + fsize * 2.0));
       }
 
       for (Floor floor : floors.values()) {
@@ -150,13 +143,13 @@ public class Engine implements Runnable, InitializingBean {
         g.setColor(Color.BLACK);
         g.drawRect(1, (int) floorY, Floor.PIXEL_WIDTH, Floor.PIXEL_HEIGHT);
         g.drawString(floor.getNum() + "층", 1, (int) floorY + 15);
-        g.drawString(Integer.toString(passengers), (int) (1 + ((double) (Floor.PIXEL_WIDTH) / 2) - ((double) fsize / 2)),
-            (int) (floorY + ((double) (Floor.PIXEL_HEIGHT) / 2.0)));
+        g.drawString(Integer.toString(passengers), (int) (1 + (double) (Floor.PIXEL_WIDTH) / 2.0 - (double) fsize / 2.0),
+            (int) (floorY + (double) Floor.PIXEL_HEIGHT / 2.0));
       }
       if((state>>1) == CircumstanceType.FIRE.state()) {
         Floor firedFloor = (Floor)Circumstance.get(CircumstanceType.FIRE).getParameter("floor");
         if(null!=firedFloor)
-          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * RealToPixelRatio +((double) (Floor.PIXEL_HEIGHT)/2 + fsize * 2)));
+          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * RealToPixelRatio +((double) Floor.PIXEL_HEIGHT/2.0 + fsize * 2.0)));
       }
       renderer.flush();
   }
@@ -193,7 +186,7 @@ public class Engine implements Runnable, InitializingBean {
           int leftVectorUnit = (int)(leftVector/Math.abs(leftVector));
           double accel = motor/mass(cabin) * leftVectorUnit;
           if(Math.abs(cabin.getVelocity())>1)
-            accel *= ((Math.abs(vector*0.5) < Math.abs(leftVector)) ? 1 : -1) ; //brake on half point
+            accel *= Math.abs(vector*0.5) < Math.abs(leftVector) ? 1 : -1; //brake on half point
           if (Double.isNaN(accel)) {
             accel = vectorUnit;
           }
@@ -259,7 +252,7 @@ public class Engine implements Runnable, InitializingBean {
   }
 
   public Double mass(Cabin cabin) {
-    return (cabinMass + (passengerMass * cabin.getPassengers().size()));
+    return cabinMass + passengerMass * cabin.getPassengers().size();
   }
 
   public Double getGravity() {

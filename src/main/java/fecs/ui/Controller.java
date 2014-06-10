@@ -64,7 +64,7 @@ public class Controller {
       }else{
         try { val = Integer.parseInt(answer); }
         catch (NumberFormatException e) { displayError("not a number"); return; }
-        if (!(val == -1 || (val >= 2 && val <= 10))) { displayError("not in a valid range"); return; }
+        if (val != -1 && (val < 2 || val > 10)) { displayError("not in a valid range"); return; }
       }
       Floor fireFloor = engine.getFloors().get(FloorType.valueOf(val));
       c.setParameter("floor", fireFloor);
