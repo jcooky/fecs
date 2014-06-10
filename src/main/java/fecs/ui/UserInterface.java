@@ -2,7 +2,7 @@ package fecs.ui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import fecs.interfaces.ICircumstance;
+import fecs.model.CircumstanceType;
 import fecs.simulator.Engine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -159,7 +159,7 @@ public class UserInterface extends JFrame implements Runnable {
     earthQuake.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.triggerFail(ICircumstance.EARTH_QUAKE);
+        controller.triggerFail(CircumstanceType.EARTH_QUAKE.type());
 
         startFail();
       }
@@ -167,7 +167,7 @@ public class UserInterface extends JFrame implements Runnable {
     fire.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.triggerFail(ICircumstance.FIRE);
+        controller.triggerFail(CircumstanceType.FIRE.type());
 
         startFail();
       }
@@ -175,7 +175,7 @@ public class UserInterface extends JFrame implements Runnable {
     flood.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.triggerFail(ICircumstance.FLOOD);
+        controller.triggerFail(CircumstanceType.FLOOD.type());
 
         startFail();
       }
@@ -183,7 +183,7 @@ public class UserInterface extends JFrame implements Runnable {
     crash.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.triggerFail(ICircumstance.CRASH);
+        controller.triggerFail(CircumstanceType.CRASH.type());
 
         startFail();
       }

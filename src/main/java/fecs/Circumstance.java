@@ -1,31 +1,32 @@
 package fecs;
 
 import fecs.interfaces.ICircumstance;
+import fecs.model.CircumstanceType;
 import org.python.core.Py;
 import org.python.core.PyObject;
 import org.python.core.PyString;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 /**
  * Created by jcooky on 2014. 4. 8..
  */
 
 public abstract class Circumstance implements ICircumstance {
-  private static final Map<String, Circumstance> strategies = new HashMap<String, Circumstance>() {
+  private static final Map<CircumstanceType, Circumstance> strategies = new EnumMap<CircumstanceType, Circumstance>(CircumstanceType.class) {
     {
-      this.put(FIRE, new FireCircumstance());
-      this.put(FLOOD,new FloodCircumstance());
-      this.put(CRASH,new CrashCircumstance());
-      this.put(EARTH_QUAKE,new EarthQuakeCircumstance());
-      this.put(DEFAULT,new DefaultCircumstance());
+      this.put(CircumstanceType.FIRE, new FireCircumstance());
+      this.put(CircumstanceType.FLOOD,new FloodCircumstance());
+      this.put(CircumstanceType.CRASH,new CrashCircumstance());
+      this.put(CircumstanceType.EARTH_QUAKE,new EarthQuakeCircumstance());
+      this.put(CircumstanceType.DEFAULT,new DefaultCircumstance());
     }
   };
-  private String name;
+  private CircumstanceType type;
   private PyObject pyCircumstance;
-  protected Circumstance(String name) {
-    pyCircumstance = Fecs.getInterpreter().get(name+"Circumstance");
-    this.name = name;
+  protected Circumstance(CircumstanceType type) {
+    pyCircumstance = Fecs.getInterpreter().get(type.type()+"Circumstance");
+    this.type = type;
   }
 
   public void trigger() {
@@ -44,33 +45,33 @@ public abstract class Circumstance implements ICircumstance {
     return m.__call__(new PyString(key)).__tojava__(Object.class);
   }
 
-  public static Circumstance get(String name) {
-    return strategies.get(name);
+  public static Circumstance get(CircumstanceType type) {
+    return strategies.get(type);
   }
 
   private static class DefaultCircumstance extends Circumstance  {
     public DefaultCircumstance() {
-      super(DEFAULT);
+      super(CircumstanceType.DEFAULT);
     }
   }
   private static class FireCircumstance extends Circumstance {
     protected FireCircumstance() {
-      super(FIRE);
+      super(CircumstanceType.FIRE);
     }
   }
   private static class FloodCircumstance extends Circumstance {
     protected FloodCircumstance() {
-      super(FLOOD);
+      super(CircumstanceType.FLOOD);
     }
   }
   private static class CrashCircumstance extends Circumstance {
     protected CrashCircumstance() {
-      super(CRASH);
+      super(CircumstanceType.CRASH);
     }
   }
   private static class EarthQuakeCircumstance extends Circumstance {
     protected EarthQuakeCircumstance() {
-      super(EARTH_QUAKE);
+      super(CircumstanceType.EARTH_QUAKE);
     }
   }
 }

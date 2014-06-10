@@ -3,6 +3,7 @@ package fecs.ui;
 import fecs.Circumstance;
 import fecs.interfaces.ICircumstance;
 import fecs.model.CabinType;
+import fecs.model.CircumstanceType;
 import fecs.model.FloorType;
 import fecs.simulator.Cabin;
 import fecs.simulator.Engine;
@@ -52,8 +53,8 @@ public class Controller {
   public void triggerFail(String name) {
     int state;
 
-    if (ICircumstance.FIRE.equals(name)) {
-      ICircumstance c = Circumstance.get(ICircumstance.FIRE).setParameter("validate",false);
+    if (CircumstanceType.FIRE.type().equals(name)) {
+      ICircumstance c = Circumstance.get(CircumstanceType.FIRE).setParameter("validate", false);
       String answer = JOptionPane.showInputDialog("which floor? (RANDOM,-1,2~10)");
 
       Integer val;
@@ -70,8 +71,8 @@ public class Controller {
 
       c.trigger();
 
-      state = ICircumstance.STATE_FIRE;
-    } else if (ICircumstance.CRASH.equals(name)) {
+      state = CircumstanceType.FIRE.state();
+    } else if (CircumstanceType.CRASH.type().equals(name)) {
       String answer = JOptionPane.showInputDialog("which cabin? (LEFT, RIGHT)");
       if(!answer.equals("LEFT") && !answer.equals("RIGHT")){
         displayError("only 'LEFT' or 'RIGHT' input available");
@@ -79,22 +80,22 @@ public class Controller {
       }
       Cabin crashCabin = engine.getCabins().get(CabinType.valueOf(answer));
 
-      Circumstance.get(ICircumstance.CRASH)
+      Circumstance.get(CircumstanceType.CRASH)
           .setParameter("validate", false)
           .setParameter("cabin", crashCabin)
           .trigger();
 
-      state = ICircumstance.STATE_CRASH;
-    } else if (ICircumstance.EARTH_QUAKE.equals(name)) {
-      Circumstance.get(ICircumstance.EARTH_QUAKE).setParameter("startTime", System.currentTimeMillis());
+      state = CircumstanceType.CRASH.state();
+    } else if (CircumstanceType.EARTH_QUAKE.type().equals(name)) {
+      Circumstance.get(CircumstanceType.EARTH_QUAKE).setParameter("startTime", System.currentTimeMillis());
 
-      state = ICircumstance.STATE_EARTH_QUAKE;
-    } else if (ICircumstance.FLOOD.equals(name)) {
-      Circumstance.get(ICircumstance.FLOOD).setParameter("startTime", System.currentTimeMillis());
+      state = CircumstanceType.EARTH_QUAKE.state();
+    } else if (CircumstanceType.FLOOD.type().equals(name)) {
+      Circumstance.get(CircumstanceType.FLOOD).setParameter("startTime", System.currentTimeMillis());
 
-      state = ICircumstance.STATE_FLOOD;
+      state = CircumstanceType.FLOOD.state();
     } else {
-      state = ICircumstance.STATE_DEFAULT;
+      state = CircumstanceType.DEFAULT.state();
     }
 
     engine.setCircumstanceState(state);

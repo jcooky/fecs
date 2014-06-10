@@ -12,6 +12,7 @@ this={
   "noPassengerMode" : False,
   "doorWait":doorWait
 }
+logger = __init__.LoggerFactory.getLogger("fecs.DefaultCircumstance")
 
 def setParameter(key,val):
   if key in  this : this[key]=val
@@ -57,32 +58,15 @@ def trigger():
 
   # clear non-waiting passengers in all floor
   for floor in floors.values():
-    for passenger in floor.getPassengers().toArray():
-      if passenger.getState() == passenger.State.NO_WAIT :
-        floor.getPassengers().remove(passenger)
-        passengerMaker.setNow(passengerMaker.getNow()-1)
+    floor.removeUsingFilterNoWait()
 
-  for cabin in cabins.values() :
-    if not cabin.isOn(): cabin.enable()
-    # if cabin.getTarget() is None: continue
-    # out.println("updating cabin"+str(cabin)+" by "+str(this["deltaTime"]))
-    engine.updateCabin(cabin,this["deltaTime"])
-    # out.println(cabins)
-    if cabin.getState()==cabin.State.STOP:
-      out.println("cabin("+str(cabin.getName())+") arrived ")
-      floor = None
-      for f in floors.values():
-        if cabin.getPosition() == f.getPosition():
-          floor = f
-      out.println("on floor("+str(floor.getNum())+")")
-      for p in cabin.getPassengers().toArray():
-        if p.getDest()==floor.getNum() :
-          # out.println(str(p)+'wants to take off')
-          p.setState(p.State.NO_WAIT)
-          cabin.getPassengers().remove(p)
-          floor.getPassengers().add(p)
-      cabin.getQueue().remove(floor);
-      if cabin.getQueue().size()>0 : cabin.move() #to next queued floor
+  # for cabin in cabins.values() :
+  #   if not cabin.isOn(): cabin.enable()
+  #   # if cabin.getTarget() is None: continue
+  #   # out.println("updating cabin"+str(cabin)+" by "+str(this["deltaTime"]))
+  #   engine.updateCabin(cabin,this["deltaTime"])
+  #   # out.println(cabins)
+
   firstFloor = floors.get(FloorType.FIRST)
   firstFloorPassengers = firstFloor.getPassengers()
   # out.println(firstFloorPassengers)
@@ -109,7 +93,7 @@ def trigger():
           out.println("death dice")
           TakeIn(arrivedCabin,firstFloorPassengers)
           crashCircumstance.setParameter('cabin',arrivedCabin)
-          engine.setCircumstanceState(__init__.ICircumstance.STATE_CRASH)
+          engine.setCircumstanceState(__init__.CircumstanceType.CRASH.state())
           ui=__init__.Fecs.getApplicationContext().getBean("userInterface")
           ui.startFail()
 

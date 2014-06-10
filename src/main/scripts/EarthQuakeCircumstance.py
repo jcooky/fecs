@@ -31,7 +31,7 @@ def trigger():
     if currentTime - startTime > 60000:
         logger.debug("ended")
         ui.endFail()
-        engine.setCircumstanceState(__init__.ICircumstance.STATE_DEFAULT)
+        engine.setCircumstanceState(__init__.CircumstanceType.DEFAULT.state())
         __init__.System.out.println(engine.getState())
         for cabin in engine.getCabins().values():
             cabin.enable()

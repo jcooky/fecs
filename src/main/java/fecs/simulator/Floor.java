@@ -1,7 +1,5 @@
 package fecs.simulator;
 
-import fecs.model.Vector;
-
 import java.io.Serializable;
 
 /**
@@ -12,15 +10,12 @@ public class Floor extends Place implements Serializable{//,Comparable {
     REAL_HEIGHT=3;
 
   private Integer num;
-  private Double wait;
 
   public Floor(Integer num) {
     this.num = num;
   }
 
   public void add(Passenger passenger) {
-    Vector vector = passenger.getDest() > passenger.getStart() ? Vector.UP : Vector.DOWN;
-
     super.passengers.add(passenger);
   }
 
@@ -28,7 +23,7 @@ public class Floor extends Place implements Serializable{//,Comparable {
     return position <= y && position + PIXEL_HEIGHT >= y + height;
   }
 
-  public int getNum() {
+  public Integer getNum() {
     return num;
   }
 
@@ -37,4 +32,11 @@ public class Floor extends Place implements Serializable{//,Comparable {
     Floor f = (Floor) o;
     return f.getNum()>this.getNum()?1:-1;
   }*/
+
+  @Override
+  public String toString() {
+    return "Floor{" +
+        "num=" + num +
+        "} " + super.toString();
+  }
 }

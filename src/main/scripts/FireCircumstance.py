@@ -9,6 +9,8 @@ this={
     "leftTime" : 2000
 }
 
+logger = __init__.LoggerFactory.getLogger("fecs.FireCircumstance")
+
 def setParameter(key,val):
   if key in  this : this[key]=val
 
@@ -19,6 +21,7 @@ def trigger():
     #global variables
     global defaultCircumstance
     engine = __init__.Fecs.getApplicationContext().getBean("engine")
+    passengerMaker = __init__.Fecs.getApplicationContext().getBean("passengerMaker")
     out=__init__.System.out
     FloorType=__init__.FloorType
     CabinType = __init__.CabinType
@@ -26,11 +29,8 @@ def trigger():
     if not this["validate"] :
         out.println("fire circumstance started with floor "+str(this["floor"].getNum()))
         this["floor"].killPassengers()
-        fireFighter=__init__.Passenger(1,this["floor"].getNum())
-        firstFloorPassengers=floors.get(FloorType.FIRST).getPassengers()
-        firstFloorPassengers.clear()
+        fireFighter=passengerMaker.makeFireFighter(this["floor"].getNum())
         out.println("1st floor passengers evacuated")
-        firstFloorPassengers.add(fireFighter)
         out.println("fire fighter arrived the building")
         defaultCircumstance.setParameter("noPassengerMode",True)
         this["fireFighter"]=fireFighter
@@ -60,9 +60,9 @@ def trigger():
               right.setTarget(firstFloor)
         elif ffstate==fireFighter.State.RIDING:
           cabin.setTarget(this["floor"])
-          out.println("fire fighter going")
+          logger.debug("fire fighter going")
         else:
-          out.println("firefighter arrived")
+          logger.debug("firefighter arrived; leftTime: {}", this["leftTime"])
           if this["leftTime"] >0:
             this["leftTime"]-=this["deltaTime"]
             cabin.setTarget(this["floor"])
@@ -70,7 +70,7 @@ def trigger():
             #reset internal state and turn back to normal circumstance
             this["floor"]=None
             defaultCircumstance.setParameter("noPassengerMode",False)
-            engine.setCircumstanceState(__init__.ICircumstance.STATE_DEFAULT)
+            engine.setCircumstanceState(__init__.CircumstanceType.DEFAULT.state())
             __init__.Fecs.getApplicationContext().getBean("userInterface").endFail()
             return
         #else : out.println("fire fighter waiting")

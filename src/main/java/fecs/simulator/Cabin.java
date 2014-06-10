@@ -1,30 +1,30 @@
 package fecs.simulator;
 
-import fecs.Fecs;
-import fecs.model.FloorType;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Created by jcooky on 2014. 3. 23..
  */
 public class Cabin extends Place implements Serializable {
 
-  public static final int PIXEL_WIDTH = 50, PIXEL_HEIGHT = 50, REAL_WIDTH=3, REAL_HEIGHT=3;
+  public static final int PIXEL_WIDTH = 50, PIXEL_HEIGHT = 50, REAL_WIDTH = 3, REAL_HEIGHT = 3;
 
-//  private Set<Floor> queue = new HashSet<>();
+  //  private Set<Floor> queue = new HashSet<>();
   private Queue<Floor> queue = new LinkedList<>();
 
-  private boolean on = false;
+  private boolean on = true;
 
   private State state = State.STOP;
   private Floor target = null;
   private double vector = 0d,
-    velocity = 0d;
-  public Cabin(String name){
-    this.name=name;
+      velocity = 0d;
+
+  public Cabin(String name) {
+    this.name = name;
   }
+
   public void move(Floor floor) {
     if (State.MOVE.equals(state)) {
       queue.add(floor);
@@ -52,7 +52,7 @@ public class Cabin extends Place implements Serializable {
 //    if(maxVectorFloor!=null) {
 //      target=maxVectorFloor;
     Floor f = queue.poll();
-    if(f!=null)
+    if (f != null)
       this.move(f);
 //    }
   }
@@ -77,7 +77,7 @@ public class Cabin extends Place implements Serializable {
 
   public void setTarget(Floor floor) {
     this.target = floor;
-    this.vector = floor==null? 0d : floor.getPosition()-position;
+    this.vector = floor == null ? 0d : floor.getPosition() - position;
   }
 
   public State getState() {
@@ -88,9 +88,13 @@ public class Cabin extends Place implements Serializable {
     this.state = state;
   }
 
-  public double getVector() { return vector; }
+  public double getVector() {
+    return vector;
+  }
 
-  public void setVector(double vector) { this.vector = vector; }
+  public void setVector(double vector) {
+    this.vector = vector;
+  }
 
   public Floor getTarget() {
     return target;

@@ -49,7 +49,7 @@ def trigger():
                 cabin.enable()
                 this["firstCalled"] = False
                 this["cabin"] = None
-                engine.setCircumstanceState(__init__.ICircumstance.STATE_DEFAULT)
+                engine.setCircumstanceState(__init__.CircumstanceType.DEFAULT.state())
                 __init__.Fecs.getApplicationContext().getBean("userInterface").endFail()
     else:
         this["validate"] = False
@@ -57,6 +57,6 @@ def trigger():
         for cabin in cabins.values():
             if cabin.getPassengers().size() * engine.getPassengerWeight() + engine.getCabinWeight() >= engine.getCabinLimitWeight():
                 this["cabin"] = cabin
-                engine.setCircumstanceState(__init__.ICircumstance.STATE_CRASH)
+                engine.setCircumstanceState(__init__.CircumstanceType.CRASH.state())
                 trigger()
                 break

@@ -5,7 +5,7 @@ __author__ = 'Byoungwoo'
 from org.slf4j import LoggerFactory
 from fecs import Fecs, CabinsController
 from fecs.simulator import Passenger
-from fecs.model import CabinType, FloorType, Vector
+from fecs.model import CabinType, FloorType, Vector, CircumstanceType
 from fecs.interfaces import ICircumstance
 
 from java.lang import System,Math

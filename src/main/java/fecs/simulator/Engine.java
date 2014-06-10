@@ -2,10 +2,9 @@ package fecs.simulator;
 
 import fecs.Circumstance;
 import fecs.Fecs;
-import fecs.interfaces.ICircumstance;
 import fecs.model.CabinType;
+import fecs.model.CircumstanceType;
 import fecs.model.FloorType;
-import fecs.model.Vector;
 import fecs.ui.Renderer;
 import fecs.ui.UserInterface;
 import org.slf4j.Logger;
@@ -56,7 +55,7 @@ public class Engine implements Runnable, InitializingBean {
   private Map<CabinType, Cabin> cabins = new EnumMap<>(CabinType.class);
   private Map<FloorType, Floor> floors = new EnumMap<>(FloorType.class);
   private Double cabinMass = 700d;
-  private Integer state = (ICircumstance.STATE_DEFAULT <<1);
+  private Integer state = (CircumstanceType.DEFAULT.state() <<1);
   private Double forceBreak = 10000d;
   private Double motorOutput = 27000d;
   private Integer cabinLimitPeople = 12;
@@ -76,8 +75,8 @@ public class Engine implements Runnable, InitializingBean {
 
         if (getEngineState() == STATE_START) { //last bit is 1 = started
           int s = getCircumstanceState()-1; //0 is null state(error)
-          if (s >= Circumstance.CIRCUMSTANCE_VECTOR.length || s <0) throw new Exception("unstable state value with "+ String.valueOf(s));
-          Circumstance.get(Circumstance.CIRCUMSTANCE_VECTOR[s])
+          if (s >= CircumstanceType.values().length || s <0) throw new Exception("unstable state value with "+ String.valueOf(s));
+          Circumstance.get(CircumstanceType.values()[s])
               .setParameter("currentTime", currentTime)
               .setParameter("deltaTime", deltaTime)
               .trigger();
@@ -123,7 +122,7 @@ public class Engine implements Runnable, InitializingBean {
         Integer x = xmap.get(type);
         Cabin cabin = cabins.get(type);
 
-        Integer passengers = new Integer(cabin.getPassengers().size());
+        int passengers = cabin.getPassengers().size();
         double cabinY=cabin.getPosition()*RealToPixelRatio,
           cabinH=(double)cabin.PIXEL_HEIGHT,
           cabinW=(double)cabin.PIXEL_WIDTH;
@@ -143,7 +142,7 @@ public class Engine implements Runnable, InitializingBean {
       }
 
       for (Floor floor : floors.values()) {
-        Integer passengers = new Integer(floor.getPassengers().size());
+        int passengers = floor.getPassengers().size();
         double floorY = floor.getPosition()*RealToPixelRatio;
         g.setFont(Font.getFont(Font.SANS_SERIF));
         g.setColor(Color.WHITE);
@@ -151,11 +150,11 @@ public class Engine implements Runnable, InitializingBean {
         g.setColor(Color.BLACK);
         g.drawRect(1, (int) floorY, Floor.PIXEL_WIDTH, Floor.PIXEL_HEIGHT);
         g.drawString(floor.getNum() + "층", 1, (int) floorY + 15);
-        g.drawString(passengers.toString(), (int) (1 + ((double) (Floor.PIXEL_WIDTH) / 2) - ((double) fsize / 2)),
+        g.drawString(Integer.toString(passengers), (int) (1 + ((double) (Floor.PIXEL_WIDTH) / 2) - ((double) fsize / 2)),
             (int) (floorY + ((double) (Floor.PIXEL_HEIGHT) / 2.0)));
       }
-      if((state>>1) == ICircumstance.STATE_FIRE) {
-        Floor firedFloor = (Floor)Circumstance.get(ICircumstance.FIRE).getParameter("floor");
+      if((state>>1) == CircumstanceType.FIRE.state()) {
+        Floor firedFloor = (Floor)Circumstance.get(CircumstanceType.FIRE).getParameter("floor");
         if(null!=firedFloor)
           g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * RealToPixelRatio +((double) (Floor.PIXEL_HEIGHT)/2 + fsize * 2)));
       }
@@ -195,10 +194,11 @@ public class Engine implements Runnable, InitializingBean {
           double accel = motor/mass(cabin) * leftVectorUnit;
           if(Math.abs(cabin.getVelocity())>1)
             accel *= ((Math.abs(vector*0.5) < Math.abs(leftVector)) ? 1 : -1) ; //brake on half point
-          if (accel==Double.NaN)
-            {accel = vectorUnit;}
+          if (Double.isNaN(accel)) {
+            accel = vectorUnit;
+          }
 //          logger.debug(String.format("%f -> %f (%f) : %f",cabin.getPosition(), target.getPosition(),vector,accel));
-          logger.debug(String.format("%s->%d, %f, %f, %f",cabin.getName(),target.getNum(),accel,leftVector,vector*0.5));
+//          logger.debug(String.format("%s->%d, %f, %f, %f",cabin.getName(),target.getNum(),accel,leftVector,vector*0.5));
           updateCabin(cabin, accel, deltaTime);
 
           if (Math.abs(leftVector)<CABIN_MOVE_THRESHOLD) { //arrive
@@ -209,21 +209,30 @@ public class Engine implements Runnable, InitializingBean {
           }
           break;
         case STOP:
-//          if (!cabin.getQueue().isEmpty() || !pushedFloorSet.isEmpty()) {
-//            Set<Floor> otherCabinQueue = (cabins.get(CabinType.LEFT)==cabin?cabins.get(CabinType.RIGHT):cabins.get(CabinType.LEFT)).getQueue(),
-//              thisCabinQueue=cabin.getQueue();
-//            for (Floor f : pushedFloorSet)
-//              if(!thisCabinQueue.contains(f) &&!otherCabinQueue.contains(f))
-//                ((thisCabinQueue.size()<=otherCabinQueue.size())?thisCabinQueue:otherCabinQueue).add(f);
-//            //add passenger awaiting floor into cabin queue
-//            cabin.move();
-//          }else
+          logger.info("cabin({}) arrived", cabin.getName());
 
-            cabin.move();
+          for (Floor floor : floors.values()) {
+            if (cabin.getPosition() == floor.getPosition()) {
+              logger.debug("on {}", floor);
+              Iterator<Passenger> it = cabin.getPassengers().iterator();
+              while (it.hasNext()) {
+                Passenger p = it.next();
+                if (p.getDest().equals(floor.getNum())) {
+                  p.setState(Passenger.State.NO_WAIT);
+                  it.remove();
+                  floor.getPassengers().add(p);
+                }
+              }
+              cabin.getQueue().remove(floor);
+            }
+          }
+
+          if (cabin.getQueue().size()>0) cabin.move(); // to next queued floor
           break;
       }
     }
   }
+
 
   private void initCabins() {
     for(CabinType t : CabinType.values()){

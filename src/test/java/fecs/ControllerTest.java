@@ -1,7 +1,7 @@
 package fecs;
 
 import fecs.admin.support.AbstractSpringBasedTestSupport;
-import fecs.interfaces.ICircumstance;
+import fecs.model.CircumstanceType;
 import fecs.simulator.Engine;
 import fecs.simulator.PassengerMaker;
 import fecs.ui.Controller;
@@ -70,9 +70,9 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
   @Test
   public void testStopSimulationWithOthers() throws Exception {
     // when
-    when(engine.getState()).thenReturn((ICircumstance.STATE_FIRE<<1)|Engine.STATE_START);
+    when(engine.getState()).thenReturn((CircumstanceType.FIRE.state()<<1)|Engine.STATE_START);
     when(engine.getEngineState()).thenReturn(Engine.STATE_START);
-    when(engine.getCircumstanceState()).thenReturn(ICircumstance.STATE_CRASH);
+    when(engine.getCircumstanceState()).thenReturn(CircumstanceType.CRASH.state());
     controller.stopSimulation();
 
     verify(engine).setEngineState(Engine.STATE_STOP);
@@ -80,7 +80,7 @@ public class ControllerTest extends AbstractSpringBasedTestSupport {
 
   @Test
   public void testTriggerFail() throws Exception {
-    when(engine.getState()).thenReturn((ICircumstance.STATE_CRASH<<1)|Engine.STATE_START);
+    when(engine.getState()).thenReturn((CircumstanceType.CRASH.state()<<1)|Engine.STATE_START);
 //    controller.startSimulation();
 //    verify(engine)
   }

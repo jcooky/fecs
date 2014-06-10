@@ -10,10 +10,14 @@ public class Passenger implements Serializable {
   private State state = State.WAIT;
   private Integer dest;
   private Integer start;
+
+  private final PassengerMaker passengerMaker;
 //  static int curId=0;
 //  private int id;
 
-  public Passenger(Integer start, Integer dest) {
+  public Passenger(PassengerMaker passengerMaker, Integer start, Integer dest) {
+    this.passengerMaker = passengerMaker;
+
     this.dest = dest;
     this.start = start;
 //    this.id=curId++;
@@ -41,6 +45,10 @@ public class Passenger implements Serializable {
 
   public void setDest(Integer dest) {
     this.dest = dest;
+  }
+
+  public void remove() {
+    passengerMaker.remove(this);
   }
 
 
@@ -77,4 +85,13 @@ public class Passenger implements Serializable {
   public int hashCode(){
     return this.id;
   }*/
+
+  @Override
+  public String toString() {
+    return "Passenger{" +
+        "start=" + start +
+        ", dest=" + dest +
+        ", state=" + state +
+        '}';
+  }
 }

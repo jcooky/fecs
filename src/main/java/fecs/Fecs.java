@@ -1,7 +1,7 @@
 package fecs;
 
-import fecs.interfaces.ICircumstance;
 import fecs.interfaces.IPassengerMaker;
+import fecs.model.CircumstanceType;
 import fecs.simulator.Engine;
 import fecs.ui.UserInterface;
 import org.python.util.PythonInterpreter;
@@ -58,7 +58,7 @@ public class Fecs implements CommandLineRunner{
     interp.exec("DefaultCircumstance.engine=engine");
     interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
     interp.exec("DefaultCircumstance.crashCircumstance=CrashCircumstance");
-    interp.set("default", Circumstance.get(ICircumstance.DEFAULT));
+    interp.set("default", Circumstance.get(CircumstanceType.DEFAULT));
     interp.exec("FireCircumstance.defaultCircumstance=default");
   }
 
