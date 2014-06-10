@@ -5,7 +5,7 @@ import fecs.simulator.Floor;
 /**
 * Created by jcooky on 2014. 3. 23..
 */
-public class CabinsController {
+public final class CabinsController {
   private CabinsController(){}
   public static void control(Cabin left, Cabin right, Floor floor) {
     Cabin cabin = null;

@@ -47,19 +47,19 @@ public class Fecs implements CommandLineRunner{
 
     Fecs.applicationContext = app.run(args);
   }
-  protected static final PythonInterpreter interp= new PythonInterpreter();
-  public static PythonInterpreter getInterpreter(){return interp;}
+  protected static final PythonInterpreter INTERP = new PythonInterpreter();
+  public static PythonInterpreter getInterpreter(){return INTERP;}
   private void initJython(){
-    interp.execfile(ClassLoader.getSystemResourceAsStream("__init__.py"));
-    interp.set("ui", userInterface);
-    interp.set("engine", engine);
-    interp.set("passengerMaker",passengerMaker);
-    interp.exec("DefaultCircumstance.ui=ui");
-    interp.exec("DefaultCircumstance.engine=engine");
-    interp.exec("DefaultCircumstance.passengerMaker=passengerMaker");
-    interp.exec("DefaultCircumstance.crashCircumstance=CrashCircumstance");
-    interp.set("default", Circumstance.get(CircumstanceType.DEFAULT));
-    interp.exec("FireCircumstance.defaultCircumstance=default");
+    INTERP.execfile(ClassLoader.getSystemResourceAsStream("__init__.py"));
+    INTERP.set("ui", userInterface);
+    INTERP.set("engine", engine);
+    INTERP.set("passengerMaker", passengerMaker);
+    INTERP.exec("DefaultCircumstance.ui=ui");
+    INTERP.exec("DefaultCircumstance.engine=engine");
+    INTERP.exec("DefaultCircumstance.passengerMaker=passengerMaker");
+    INTERP.exec("DefaultCircumstance.crashCircumstance=CrashCircumstance");
+    INTERP.set("default", Circumstance.get(CircumstanceType.DEFAULT));
+    INTERP.exec("FireCircumstance.defaultCircumstance=default");
   }
 
   public static ApplicationContext getApplicationContext() { return applicationContext; }
