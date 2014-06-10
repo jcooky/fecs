@@ -22,11 +22,9 @@ public abstract class Circumstance implements ICircumstance {
       this.put(CircumstanceType.DEFAULT,new DefaultCircumstance());
     }
   };
-  private CircumstanceType type;
   private PyObject pyCircumstance;
   protected Circumstance(CircumstanceType type) {
     pyCircumstance = Fecs.getInterpreter().get(type.type()+"Circumstance");
-    this.type = type;
   }
 
   public void trigger() {

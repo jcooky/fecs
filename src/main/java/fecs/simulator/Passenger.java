@@ -1,11 +1,9 @@
 package fecs.simulator;
 
-import java.io.Serializable;
-
 /**
  * Created by jcooky on 2014. 3. 23..
  */
-public class Passenger implements Serializable {
+public class Passenger {
 
   private State state = State.WAIT;
   private Integer dest;
