@@ -1,7 +1,5 @@
 package fecs.interfaces;
 
-import fecs.Circumstance;
-
 /**
  * Created by Byoungwoo on 2014-05-14.
  */
@@ -17,5 +15,5 @@ public interface ICircumstance {
   public static final int STATE_DEFAULT = 1, STATE_FIRE = 2, STATE_FLOOD = 3, STATE_CRASH = 4, STATE_EARTH_QUAKE = 5;
 
   public void trigger();
-  public Circumstance setParameter(String key,Object val);
+  public fecs.Circumstance setParameter(String key,Object val);
 }
