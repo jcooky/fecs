@@ -6,5 +6,5 @@ package fecs.interfaces;
 public interface ICircumstance {
 
   void trigger();
-  fecs.Circumstance setParameter(String key,Object val);
+  fecs.Circumstance setParameter(String key, Object val);
 }

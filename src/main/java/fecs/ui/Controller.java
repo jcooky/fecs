@@ -60,7 +60,9 @@ public class Controller {
       Integer val;
       if(answer.equals("RANDOM")) {
         val = (int)(new java.util.Random().nextInt(10));
-        if(val==0) val--;
+        if (val == 0) {
+          val--;
+        }
       }else{
         try { val = Integer.parseInt(answer); }
         catch (NumberFormatException e) { displayError("not a number"); return; }

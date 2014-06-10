@@ -15,7 +15,6 @@ public enum FloorType {
     return value;
   }
 
-  private static FloorType arr[] = {FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,SEVENTH,EIGHTH,NINETH,TENTH};
   public static FloorType valueOf(int i) {
     for (FloorType floorType : values()) {
       if (i == floorType.getValue()) {
