@@ -13,7 +13,7 @@ import java.util.Map;
  */
 
 public abstract class Circumstance implements ICircumstance {
-  private static final Map<CircumstanceType, Circumstance> strategies = new EnumMap<CircumstanceType, Circumstance>(CircumstanceType.class) {
+  private static final Map<CircumstanceType, Circumstance> circumstances = new EnumMap<CircumstanceType, Circumstance>(CircumstanceType.class) {
     {
       this.put(CircumstanceType.FIRE, new FireCircumstance());
       this.put(CircumstanceType.FLOOD,new FloodCircumstance());
@@ -28,7 +28,7 @@ public abstract class Circumstance implements ICircumstance {
   }
 
   public void trigger() {
-    pyCircumstance.__getattr__("trigger").__call__(); //executes .py file
+    pyCircumstance.__getattr__("trigger").__call__();
   }
 
   public Circumstance setParameter(String key, Object val){
@@ -44,7 +44,7 @@ public abstract class Circumstance implements ICircumstance {
   }
 
   public static Circumstance get(CircumstanceType type) {
-    return strategies.get(type);
+    return circumstances.get(type);
   }
 
   private static class DefaultCircumstance extends Circumstance  {

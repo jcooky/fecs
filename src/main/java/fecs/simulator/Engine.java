@@ -22,10 +22,10 @@ import java.util.*;
  */
 @Component("engine")
 public class Engine implements Runnable, InitializingBean {
-  static public final int STATE_STOP = 0b00,
+  public static final int STATE_STOP = 0b00,
       STATE_START = 0b01;
-  static public final double CABIN_MOVE_THRESHOLD=10*0.01; //30cm in m
-  static public final double RealToPixelRatio = Floor.PIXEL_HEIGHT / Floor.REAL_HEIGHT;
+  public static final double CABIN_MOVE_THRESHOLD=10*0.01; //30cm in m
+  public static final double REAL_TO_PIXEL_RATIO = Floor.PIXEL_HEIGHT / Floor.REAL_HEIGHT;
 
   @Autowired
   private UserInterface ui;
@@ -116,7 +116,7 @@ public class Engine implements Runnable, InitializingBean {
         Cabin cabin = cabins.get(type);
 
         int passengers = cabin.getPassengers().size();
-        double cabinY=cabin.getPosition()*RealToPixelRatio,
+        double cabinY=cabin.getPosition()* REAL_TO_PIXEL_RATIO,
           cabinH=(double)cabin.PIXEL_HEIGHT,
           cabinW=(double)cabin.PIXEL_WIDTH;
 
@@ -136,7 +136,7 @@ public class Engine implements Runnable, InitializingBean {
 
       for (Floor floor : floors.values()) {
         int passengers = floor.getPassengers().size();
-        double floorY = floor.getPosition()*RealToPixelRatio;
+        double floorY = floor.getPosition()* REAL_TO_PIXEL_RATIO;
         g.setFont(Font.getFont(Font.SANS_SERIF));
         g.setColor(Color.WHITE);
         g.fillRect(1, (int) floorY, Floor.PIXEL_WIDTH, Floor.PIXEL_HEIGHT);
@@ -149,7 +149,7 @@ public class Engine implements Runnable, InitializingBean {
       if((state>>1) == CircumstanceType.FIRE.state()) {
         Floor firedFloor = (Floor)Circumstance.get(CircumstanceType.FIRE).getParameter("floor");
         if(null!=firedFloor)
-          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * RealToPixelRatio +((double) Floor.PIXEL_HEIGHT/2.0 + fsize * 2.0)));
+          g.drawString("화재", Floor.PIXEL_WIDTH / 2 - fsize, (int)(firedFloor.getPosition() * REAL_TO_PIXEL_RATIO +((double) Floor.PIXEL_HEIGHT/2.0 + fsize * 2.0)));
       }
       renderer.flush();
   }

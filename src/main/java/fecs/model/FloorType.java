@@ -17,8 +17,12 @@ public enum FloorType {
 
   private static FloorType arr[] = {FIRST,SECOND,THIRD,FOURTH,FIFTH,SIXTH,SEVENTH,EIGHTH,NINETH,TENTH};
   public static FloorType valueOf(int i) {
-    if (i==-1) return UNDER_FIRST;
-    if (1<=i && i <=10) return arr[i-1];
+    for (FloorType floorType : values()) {
+      if (i == floorType.getValue()) {
+        return floorType;
+      }
+    }
+
     throw new IllegalArgumentException("i is illegal[i: " + i + "]");
   }
 }

@@ -11,7 +11,6 @@ public class Cabin extends Place implements Serializable {
 
   public static final int PIXEL_WIDTH = 50, PIXEL_HEIGHT = 50, REAL_WIDTH = 3, REAL_HEIGHT = 3;
 
-  //  private Set<Floor> queue = new HashSet<>();
   private Queue<Floor> queue = new LinkedList<>();
 
   private boolean on = true;
@@ -35,25 +34,26 @@ public class Cabin extends Place implements Serializable {
   }
 
   public void move() {
-    /*Set<Floor> floors = new HashSet<>(queue);
-    double maxVector=0d;
-    Floor maxVectorFloor=null;
-    for(Floor f : floors){
-      double vec = f.getPosition() - position;
-      Double vectorSum = Math.abs(vector + vec);//Math.abs(position-f.getPosition());
-      if(maxVectorFloor==null || maxVector<vectorSum) // initialize // near floor first
-        maxVectorFloor = f;
-      else if(maxVector==vectorSum && maxVectorFloor.getNum()>f.getNum())// lower floor first
-        maxVectorFloor = f;
-      else continue;
-        maxVector = vec;
-    }*/
+//    Set<Floor> floors = new HashSet<>(queue);
+//    double maxVector=0d;
+//    Floor maxVectorFloor=null;
+//    for(Floor f : floors){
+//      double vec = f.getPosition() - position;
+//      Double vectorSum = Math.abs(vector + vec);//Math.abs(position-f.getPosition());
+//      if(maxVectorFloor==null || maxVector<vectorSum) // initialize // near floor first
+//        maxVectorFloor = f;
+//      else if(maxVector==vectorSum && maxVectorFloor.getNum()>f.getNum())// lower floor first
+//        maxVectorFloor = f;
+//      else continue;
+//        maxVector = vec;
+//    }
 
 //    if(maxVectorFloor!=null) {
 //      target=maxVectorFloor;
     Floor f = queue.poll();
-    if (f != null)
+    if (f != null) {
       this.move(f);
+    }
 //    }
   }
 
