@@ -76,8 +76,8 @@ public class Engine implements Runnable, InitializingBean {
 
         if (getEngineState() == STATE_START) { //last bit is 1 = started
           int s = getCircumstanceState()-1; //0 is null state(error)
-          if (s >= Circumstance.CircumstanceVector.length || s <0) throw new Exception("unstable state value with "+ String.valueOf(s));
-          Circumstance.get(Circumstance.CircumstanceVector[s])
+          if (s >= Circumstance.CIRCUMSTANCE_VECTOR.length || s <0) throw new Exception("unstable state value with "+ String.valueOf(s));
+          Circumstance.get(Circumstance.CIRCUMSTANCE_VECTOR[s])
               .setParameter("currentTime", currentTime)
               .setParameter("deltaTime", deltaTime)
               .trigger();

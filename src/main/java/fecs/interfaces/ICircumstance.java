@@ -12,7 +12,7 @@ public interface ICircumstance {
   public static final String CRASH = "Crash"; //4
   public static final String EARTH_QUAKE = "EarthQuake"; //5
   /* commented numbers above used for bitwise strategy selection using array below */
-  public static final String[] CircumstanceVector = new String[] {DEFAULT,FIRE,FLOOD,CRASH,EARTH_QUAKE};
+  public static final String[] CIRCUMSTANCE_VECTOR = new String[] {DEFAULT,FIRE,FLOOD,CRASH,EARTH_QUAKE};
 
   public static final int STATE_DEFAULT = 1, STATE_FIRE = 2, STATE_FLOOD = 3, STATE_CRASH = 4, STATE_EARTH_QUAKE = 5;
 
