@@ -38,8 +38,9 @@ public abstract class Circumstance implements ICircumstance {
 
   public Object getParameter(String key) {
     PyObject m = pyCircumstance.__getattr__("getParameter");
-    if(m==null)
-      {return null;}
+    if(m==null) {
+      return null;
+    }
     return m.__call__(new PyString(key)).__tojava__(Object.class);
   }
 
